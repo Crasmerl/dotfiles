@@ -1,0 +1,36 @@
+:root {
+  --cc-bg:                  rgba(12, 26, 25, 0.88);
+  --noti-border-color:      rgba(64, 224, 207, 0.18);
+  --noti-bg:                28, 56, 54;
+  --noti-bg-alpha:          0.92;
+  --noti-bg-darker:         rgb(12, 26, 25);
+  --noti-bg-hover:          rgb(38, 76, 73);
+  --noti-bg-focus:          rgba(64, 224, 207, 0.1);
+  --noti-close-bg:          rgba(64, 224, 207, 0.12);
+  --noti-close-bg-hover:    rgba(64, 224, 207, 0.28);
+  --text-color:             rgb(230, 255, 252);
+  --text-color-disabled:    rgb(90, 125, 121);
+  --bg-selected:            rgb(0, 194, 173);
+}
+
+@define-color cc-bg              rgba(12, 26, 25, 0.88);
+@define-color noti-border-color  rgba(64, 224, 207, 0.18);
+@define-color noti-bg            rgba(28, 56, 54, 0.92);
+@define-color noti-bg-opaque     rgb(28, 56, 54);
+@define-color noti-bg-darker     rgb(12, 26, 25);
+@define-color noti-bg-hover      rgb(38, 76, 73);
+@define-color noti-bg-hover-opaque rgb(38, 76, 73);
+@define-color noti-bg-focus      rgba(64, 224, 207, 0.1);
+@define-color noti-close-bg      rgba(64, 224, 207, 0.12);
+@define-color noti-close-bg-hover rgba(64, 224, 207, 0.28);
+@define-color text-color         rgb(230, 255, 252);
+@define-color text-color-disabled rgb(90, 125, 121);
+@define-color bg-selected        rgb(0, 194, 173);
+
+.notification-row .notification-background .notification.critical {
+  border-color: rgba(255, 107, 107, 0.6);
+}
+
+.notification-row .notification-background .notification.critical .notification-default-action .notification-content .text-box .summary {
+  color: rgb(255, 135, 135);
+}
