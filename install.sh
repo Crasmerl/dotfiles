@@ -126,6 +126,31 @@ if [[ -d "$DOTFILES_DIR/zellij" ]]; then
   create_symlink "$DOTFILES_DIR/zellij" "$HOME/.config/zellij" "Zellij terminal multiplexer config"
 fi
 
+# Neovim
+if [[ -d "$DOTFILES_DIR/nvim" ]]; then
+  create_symlink "$DOTFILES_DIR/nvim" "$HOME/.config/nvim" "Neovim config"
+fi
+
+# fastfetch
+if [[ -d "$DOTFILES_DIR/fastfetch" ]]; then
+  create_symlink "$DOTFILES_DIR/fastfetch" "$HOME/.config/fastfetch" "fastfetch config"
+fi
+
+# eww widgets (Linux only)
+if [[ "$OS" == "linux" && -d "$DOTFILES_DIR/eww" ]]; then
+  create_symlink "$DOTFILES_DIR/eww" "$HOME/.config/eww" "eww widgets config"
+fi
+
+# swaync notification center (Linux only)
+if [[ "$OS" == "linux" && -d "$DOTFILES_DIR/swaync" ]]; then
+  create_symlink "$DOTFILES_DIR/swaync" "$HOME/.config/swaync" "swaync config"
+fi
+
+# thefuck
+if [[ -d "$DOTFILES_DIR/thefuck" ]]; then
+  create_symlink "$DOTFILES_DIR/thefuck" "$HOME/.config/thefuck" "thefuck config"
+fi
+
 # Zsh configuration
 echo -e "\n${BLUE}🐚 Installing Zsh configuration...${NC}"
 if [[ -f "$DOTFILES_DIR/zsh/zshrc" ]]; then
