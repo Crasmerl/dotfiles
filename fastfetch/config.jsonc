@@ -1,0 +1,34 @@
+{
+  // Logo: usa el backend de kitty para render real (si está disponible)
+  "logo": {
+    "type": "kitty",
+    // Opcional: usar una imagen en vez del logo distro
+    "source": "/home/crasmerl/Descargas/logo.png",
+    "width": 20
+  },
+
+  "display": {
+    "separator": "  "
+  },
+
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "kernel",
+    "uptime",
+    "packages",
+    "shell",
+    "terminal",
+    "wm",
+    "theme",
+    "cpu",
+    "gpu",
+    "memory",
+    "disk",
+    "localip",
+    "break",
+    "colors"
+  ]
+}
+
