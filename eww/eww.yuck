@@ -1,0 +1,52 @@
+(defpoll player   :interval "1s" "~/.config/eww/scripts/player_active.sh")
+(defpoll pstatus  :interval "1s" "~/.config/eww/scripts/status.sh")
+(defpoll title    :interval "1s" "~/.config/eww/scripts/meta.sh title")
+(defpoll artist   :interval "1s" "~/.config/eww/scripts/meta.sh artist")
+(defpoll cover    :interval "3s" "~/.config/eww/scripts/cover.sh")
+(defpoll pos      :interval "1s" "~/.config/eww/scripts/position.sh pos")
+(defpoll len      :interval "3s" "~/.config/eww/scripts/position.sh len")
+(defpoll pct      :interval "1s" "~/.config/eww/scripts/position.sh pct")
+(defpoll posfmt   :interval "1s" "~/.config/eww/scripts/position.sh posfmt")
+(defpoll lenfmt   :interval "3s" "~/.config/eww/scripts/position.sh lenfmt")
+(defpoll playlabel :interval "1s" "~/.config/eww/scripts/play_label.sh")
+
+
+(defwidget music_widget []
+  (box :class "music" :orientation "horizontal" :spacing 14
+    (image :class "cover" :path cover)
+    (box :class "meta" :orientation "vertical" :spacing 0 :valign "center" :hexpand true
+      (label :class "title" :xalign 0 :truncate true
+             :text (if title title "Sin reproducción"))
+      (label :class "artist" :xalign 0 :truncate true
+             :text artist)
+
+      (box :class "seek-wrap" :orientation "vertical" :spacing 0
+        (scale :class "seek"
+          :min 0
+          :max 100
+          :value pct
+          :onchange "bash -lc '~/.config/eww/scripts/seek.sh {}'")
+        (box :class "time-row" :hexpand true
+          (label :class "time-label" :xalign 0 :text posfmt)
+          (label :class "time-label" :xalign 1 :halign "end" :hexpand true :text lenfmt)
+        )
+      )
+
+      (box :class "controls" :halign "center" :spacing 6
+        (button :class "ctrl-btn"  :onclick "~/.config/eww/scripts/controls.sh prev"   "⏮")
+        (button :class "ctrl-btn play-btn" :onclick "~/.config/eww/scripts/controls.sh toggle" playlabel)
+        (button :class "ctrl-btn"  :onclick "~/.config/eww/scripts/controls.sh next"   "⏭")
+      )
+    )
+  )
+)
+
+(defwindow music
+  :monitor 0
+  :geometry (geometry :x "1470px" :y "20px" :width "440px" :height "168px")
+  :anchor "top left"
+  :stacking "fg"
+  :exclusive false
+  :layer "top"
+  :namespace "eww-music"
+  (music_widget))
