@@ -151,6 +151,11 @@ if [[ -d "$DOTFILES_DIR/thefuck" ]]; then
   create_symlink "$DOTFILES_DIR/thefuck" "$HOME/.config/thefuck" "thefuck config"
 fi
 
+# yazi file manager
+if [[ -d "$DOTFILES_DIR/yazi" ]]; then
+  create_symlink "$DOTFILES_DIR/yazi" "$HOME/.config/yazi" "yazi config"
+fi
+
 # Zsh configuration
 echo -e "\n${BLUE}🐚 Installing Zsh configuration...${NC}"
 if [[ -f "$DOTFILES_DIR/zsh/zshrc" ]]; then

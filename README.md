@@ -49,6 +49,7 @@ El script de instalación crea los symlinks automáticamente y hace una copia de
 | **wofi/** | Lanzador de aplicaciones, configuración y estilos |
 | **swaync/** | Estilos del centro de notificaciones |
 | **thefuck/** | Configuración del corrector de comandos |
+| **yazi/** | Gestor de archivos en terminal |
 | **zellij/** | Layouts y configuración del multiplexor de terminal |
 | **vscode/** | Ajustes y atajos de teclado de VSCode y Cursor |
 | **git/** | Configuración global de git |
