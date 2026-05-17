@@ -1,9 +1,4 @@
 {
-  "custom/arch": {
-    "format": "󰣇",
-    "tooltip": true,
-    "tooltip-format": "btw"
-  },
   "hyprland/workspaces": {
     "disable-scroll": true,
     "all-outputs": true,
@@ -36,16 +31,30 @@
       "phone": "",
       "portable": "",
       "car": "",
-      "default": ["", "", ""]
+      "default": [
+        "",
+        "",
+        ""
+      ]
     },
     "on-click": "pavucontrol"
   },
   "network": {
-    "format-wifi": "   {essid} ({signalStrength}%)",
-    "format-ethernet": "{ipaddr}/{cidr} ",
-    "tooltip-format": "{ifname} via {gwaddr} ",
-    "format-linked": "{ifname} (No IP) ",
-    "format-disconnected": "Disconnected ⚠"
+    "format-wifi": "",
+    "format-ethernet": "",
+    "format-disconnected": "⚠"
+  },
+  "group/system": {
+    "orientation": "horizontal",
+    "drawer": {
+      "transition-duration": 200,
+      "click-to-reveal": false
+    },
+    "modules": [
+      "cpu",
+      "memory",
+      "temperature"
+    ]
   },
   "cpu": {
     "format": "  {usage}%",
@@ -69,7 +78,17 @@
   },
   "backlight": {
     "format": "{percent}% {icon}",
-    "format-icons": ["", "", "", "", "", "", "", "", ""]
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
   },
   "battery": {
     "states": {
@@ -81,14 +100,108 @@
     "format-charging": "  {capacity}%",
     "format-plugged": "  {capacity}%",
     "format-alt": "{time}  {icon}",
-    "format-icons": ["", "", "", "", ""]
-  },
-  "battery#bat2": {
-    "bat": "BAT2"
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
   },
   "clock": {
     "format": "{:%H:%M | %e %b} ",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     "format-alt": "{:%Y-%m-%d}"
+  },
+  "tray": {
+    "spacing": 10,
+    "icon-size": 18
+  },
+  "group/wifi": {
+    "orientation": "horizontal",
+    "drawer": {
+      "transition-duration": 200,
+      "click-to-reveal": false
+    },
+    "modules": [
+      "network",
+      "network#ssid"
+    ]
+  },
+  "network#ssid": {
+    "format-wifi": "{essid} ({signalStrength}%)",
+    "format-ethernet": "{ipaddr}/{cidr}",
+    "format-disconnected": "Disconnected",
+    "tooltip-format": "{ifname} via {gwaddr}"
+  },
+  "custom/swaync": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂚",
+      "dnd-notification": "󰂛",
+      "dnd-none": "󰂛",
+      "inhibited-notification": "󱅫",
+      "inhibited-none": "󰂚",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰂛"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+  "image": {
+    "path": "/home/crasmerl/.config/waybar/logo.png",
+    "size": 30,
+    "interval": 3600
+  },
+  "group/power": {
+    "orientation": "horizontal",
+    "drawer": {
+      "transition-duration": 300,
+      "click-to-reveal": false
+    },
+    "modules": [
+      "image",
+      "custom/lock",
+      "custom/suspend",
+      "custom/logout",
+      "custom/reboot",
+      "custom/shutdown"
+    ]
+  },
+  "custom/lock": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Bloquear",
+    "on-click": "hyprlock"
+  },
+  "custom/suspend": {
+    "format": "󰤄",
+    "tooltip": true,
+    "tooltip-format": "Suspender",
+    "on-click": "systemctl suspend"
+  },
+  "custom/logout": {
+    "format": "󰍃",
+    "tooltip": true,
+    "tooltip-format": "Cerrar sesión",
+    "on-click": "hyprctl dispatch exit"
+  },
+  "custom/reboot": {
+    "format": "󰑓",
+    "tooltip": true,
+    "tooltip-format": "Reiniciar",
+    "on-click": "systemctl reboot"
+  },
+  "custom/shutdown": {
+    "format": "󰐥",
+    "tooltip": true,
+    "tooltip-format": "Apagar",
+    "on-click": "systemctl poweroff"
   }
 }

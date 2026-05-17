@@ -12,3 +12,21 @@ fi
 
 # Load aliases
 source "$CONFIG_PATH/zsh/zshrc.alias"
+
+# zsh-autosuggestions
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# thefuck
+eval "$(thefuck --alias)"
+
+# zsh-syntax-highlighting (SIEMPRE lo último)
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+if [[ -z "$FASTFETCH_SHOWN" ]]; then
+  export FASTFETCH_SHOWN=1
+  clear
+  fastfetch
+fi
+
+
+
