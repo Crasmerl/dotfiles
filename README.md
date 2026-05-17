@@ -1,12 +1,12 @@
 # Crasmerl - Dotfiles
 
-Personal configuration files for my Arch Linux setup with Hyprland. Feel free to take inspiration or use anything you find useful.
+Archivos de configuración personales para mi setup de Arch Linux con Hyprland. Siéntete libre de usarlos o coger inspiración.
 
-Use at your own risk.
+Úsalos bajo tu propia responsabilidad.
 
-![Screenshot](./screenshot.png)
+![Captura de pantalla](./screenshot.png)
 
-## Setup
+## Instalación
 
 ```bash
 mkdir -p ~/dev/config
@@ -15,14 +15,14 @@ cd ~/dev/config/dotfiles
 ./install.sh
 ```
 
-The install script creates symlinks automatically and backs up any existing configs to `~/.dotfiles_backup/`.
+El script de instalación crea los symlinks automáticamente y hace una copia de seguridad de las configuraciones existentes en `~/.dotfiles_backup/`.
 
-## Requirements
+## Requisitos
 
 - zsh + oh-my-zsh
 - Hyprland
 - Waybar
-- Kitty or Ghostty
+- Kitty o Ghostty
 - Neovim (NvChad)
 - fastfetch
 - eww
@@ -33,24 +33,24 @@ The install script creates symlinks automatically and backs up any existing conf
 - zellij
 - git
 
-## What's Included
+## Qué incluye
 
-| Folder | Description |
+| Carpeta | Descripción |
 |---|---|
 | **hypr/** | Hyprland, hyprlock, hypridle, hyprpaper |
-| **waybar/** | Status bar config and styles |
-| **eww/** | Widgets (music player) and scripts |
-| **nvim/** | Neovim config with NvChad and plugins |
-| **kitty/** | Kitty terminal config and theme |
-| **ghostty/** | Ghostty terminal config |
-| **fastfetch/** | System info on terminal launch with custom logo |
-| **zsh/** | Zshrc, aliases and themes for Linux and macOS |
-| **btop/** | System monitor config with Tokyo Night theme |
-| **wofi/** | App launcher config and styles |
-| **swaync/** | Notification center styles |
-| **thefuck/** | Shell correction tool settings |
-| **zellij/** | Terminal multiplexer layouts and config |
-| **vscode/** | VSCode and Cursor settings and keybindings |
-| **git/** | Global git config |
-| **bin/** | Utility scripts |
-| **cursor/** | Cursor editor desktop entry and icon |
+| **waybar/** | Barra de estado, configuración y estilos |
+| **eww/** | Widgets (reproductor de música) y scripts |
+| **nvim/** | Configuración de Neovim con NvChad y plugins |
+| **kitty/** | Configuración y tema de Kitty |
+| **ghostty/** | Configuración de Ghostty |
+| **fastfetch/** | Info del sistema al abrir la terminal con logo personalizado |
+| **zsh/** | Zshrc, aliases y temas para Linux y macOS |
+| **btop/** | Monitor del sistema con tema Tokyo Night |
+| **wofi/** | Lanzador de aplicaciones, configuración y estilos |
+| **swaync/** | Estilos del centro de notificaciones |
+| **thefuck/** | Configuración del corrector de comandos |
+| **zellij/** | Layouts y configuración del multiplexor de terminal |
+| **vscode/** | Ajustes y atajos de teclado de VSCode y Cursor |
+| **git/** | Configuración global de git |
+| **bin/** | Scripts de utilidad |
+| **cursor/** | Acceso directo e icono del editor Cursor |
