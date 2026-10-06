@@ -1,6 +1,6 @@
 # Crasmerl - Dotfiles
 
-Archivos de configuración personales para mi setup de Arch Linux con Hyprland. Siéntete libre de usarlos o coger inspiración.
+Archivos de configuración personales para mi setup de CachyOS (Arch) con Hyprland y Noctalia. Los colores de todo (bordes, terminal, Neovim, wofi, tmux, Discord, Firefox…) cambian según el fondo de pantalla. Siéntete libre de usarlos o coger inspiración.
 
 Úsalos bajo tu propia responsabilidad.
 
@@ -19,9 +19,11 @@ El script de instalación crea los symlinks automáticamente y hace una copia de
 
 ## Requisitos
 
-- zsh + oh-my-zsh
 - Hyprland
-- Waybar
+- Noctalia shell
+- fish + Starship
+- tmux
+- eza, fzf
 - Kitty o Ghostty
 - Neovim (NvChad)
 - fastfetch
@@ -33,19 +35,25 @@ El script de instalación crea los symlinks automáticamente y hace una copia de
 - zellij
 - git
 
+Opcionales (antiguos): zsh + oh-my-zsh, Waybar
+
 ## Qué incluye
 
 | Carpeta | Descripción |
 |---|---|
 | **hypr/** | Hyprland, hyprlock, hypridle, hyprpaper |
-| **waybar/** | Barra de estado, configuración y estilos |
+| **noctalia/** | Barra Noctalia: ajustes, plantillas de colores según el fondo, iconos y plugin propio (se copia, no se enlaza) |
+| **fish/** | Shell fish con frases y avisos de personajes (Miku, Teto, Adachi Rei…) |
+| **starship/** | Prompt estilo powerline |
+| **tmux/** | Multiplexor de terminal (uso desde el iPad por SSH) |
+| **waybar/** | Barra de estado antigua, configuración y estilos |
 | **eww/** | Widgets (reproductor de música) y scripts |
-| **nvim/** | Configuración de Neovim con NvChad y plugins |
-| **kitty/** | Configuración y tema de Kitty |
+| **nvim/** | Neovim con NvChad, tema propio *cenote* y colores según el fondo |
+| **kitty/** | Kitty con estela del cursor y colores según el fondo |
 | **ghostty/** | Configuración de Ghostty |
 | **fastfetch/** | Info del sistema al abrir la terminal con logo personalizado |
 | **zsh/** | Zshrc, aliases y temas para Linux y macOS |
-| **btop/** | Monitor del sistema con tema Tokyo Night |
+| **btop/** | Monitor del sistema con tema de Noctalia |
 | **wofi/** | Lanzador de aplicaciones, configuración y estilos |
 | **swaync/** | Estilos del centro de notificaciones |
 | **thefuck/** | Configuración del corrector de comandos |
