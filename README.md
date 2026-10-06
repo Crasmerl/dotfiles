@@ -4,7 +4,24 @@ Archivos de configuración personales para mi setup de CachyOS (Arch) con Hyprla
 
 Úsalos bajo tu propia responsabilidad.
 
-![Captura de pantalla](./screenshot.png)
+![Los colores cambian según el fondo](./capturas/colores-segun-fondo.webp)
+
+## Capturas
+
+| | |
+|---|---|
+| ![Escritorio rojo](./capturas/escritorio-rojo.png) | ![Escritorio Miku](./capturas/escritorio-miku.png) |
+| ![Trabajando en rojo](./capturas/trabajando-rojo.png) | ![Trabajando en Miku](./capturas/trabajando-miku.png) |
+| ![Escritorio claro](./capturas/escritorio-claro.png) | ![Lanzador](./capturas/lanzador.png) |
+
+![Terminales: cava, cmatrix y fastfetch](./capturas/terminales.webp)
+
+<details>
+<summary>Así empezó todo (mayo 2026)</summary>
+
+![Rice de mayo](./capturas/rice-mayo-2026.png)
+
+</details>
 
 ## Instalación
 
