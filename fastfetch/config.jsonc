@@ -3,7 +3,7 @@
   "logo": {
     "type": "kitty",
     // Opcional: usar una imagen en vez del logo distro
-    "source": "/home/crasmerl/Descargas/logo.png",
+    "source": "/home/crasmerl/.config/fastfetch/logo.png",
     "width": 20
   },
 
@@ -26,7 +26,6 @@
     "gpu",
     "memory",
     "disk",
-    "localip",
     "break",
     "colors"
   ]

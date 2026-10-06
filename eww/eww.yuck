@@ -13,7 +13,7 @@
 
 (defwidget music_widget []
   (box :class "music" :orientation "horizontal" :spacing 14
-    (image :class "cover" :path cover)
+    (image :class "cover" :path cover :width 120 :height 120)
     (box :class "meta" :orientation "vertical" :spacing 0 :valign "center" :hexpand true
       (label :class "title" :xalign 0 :truncate true
              :text (if title title "Sin reproducción"))
@@ -43,8 +43,8 @@
 
 (defwindow music
   :monitor 0
-  :geometry (geometry :x "1470px" :y "20px" :width "440px" :height "168px")
-  :anchor "top left"
+  :geometry (geometry :x "20px" :y "20px" :width "440px" :height "168px")
+  :anchor "top right"
   :stacking "fg"
   :exclusive false
   :layer "top"

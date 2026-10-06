@@ -1,0 +1,45 @@
+# Plantillas propias: Noctalia genera estos archivos con los colores de cada fondo.
+# Que se usen o no lo decide ~/.local/bin/colores-fondo (con background.png no se usan).
+[templates.kitty-fondo]
+input_path = "/etc/xdg/quickshell/noctalia-shell/Assets/Templates/terminal/kitty.conf"
+output_path = "~/.config/kitty/themes/noctalia.conf"
+
+[templates.btop-fondo]
+input_path = "/etc/xdg/quickshell/noctalia-shell/Assets/Templates/btop.theme"
+output_path = "~/.config/btop/themes/noctalia.theme"
+
+[templates.cava-fondo]
+input_path = "/etc/xdg/quickshell/noctalia-shell/Assets/Templates/cava.ini"
+output_path = "~/.config/cava/themes/noctalia"
+
+[templates.gtk3-fondo]
+input_path = "/etc/xdg/quickshell/noctalia-shell/Assets/Templates/gtk3.css"
+output_path = "~/.config/gtk-3.0/noctalia.css"
+
+[templates.gtk4-fondo]
+input_path = "/etc/xdg/quickshell/noctalia-shell/Assets/Templates/gtk4.css"
+output_path = "~/.config/gtk-4.0/noctalia.css"
+
+[templates.hypr-borde-fondo]
+input_path = "~/.config/noctalia/plantillas/hypr-borde.conf"
+output_path = "~/.config/hypr/themes/noctalia-borde.conf"
+
+[templates.wofi-fondo]
+input_path = "~/.config/noctalia/plantillas/wofi.css"
+output_path = "~/.config/wofi/themes/noctalia.css"
+
+[templates.nvim-fondo]
+input_path = "~/.config/noctalia/plantillas/nvim.lua"
+output_path = "~/.config/nvim/themes/noctalia.lua"
+
+[templates.tmux-fondo]
+input_path = "~/.config/noctalia/plantillas/tmux.conf"
+output_path = "~/.config/tmux/themes/noctalia.conf"
+
+[templates.pywalfox-fondo]
+input_path = "/etc/xdg/quickshell/noctalia-shell/Assets/Templates/pywalfox.json"
+output_path = "~/.config/noctalia/colores-apps/pywalfox-fondo.json"
+
+[templates.discord-fondo]
+input_path = "/etc/xdg/quickshell/noctalia-shell/Assets/Templates/discord-midnight.css"
+output_path = "~/.config/noctalia/colores-apps/discord-fondo.css"

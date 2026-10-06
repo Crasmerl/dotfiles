@@ -1,0 +1,153 @@
+# Prompt estilo powerline. Usa los colores de la terminal (no hex fijos)
+# para que siga a kitty: cenote con background.png y colores del fondo con otros.
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$os\
+$username\
+[](bg:cyan fg:blue)\
+$directory\
+[](fg:cyan bg:green)\
+$git_branch\
+$git_status\
+[](fg:green bg:purple)\
+$python\
+$c\
+$cpp\
+$dotnet\
+$nodejs\
+$deno\
+$java\
+$lua\
+$rust\
+$golang\
+$php\
+$ruby\
+$kotlin\
+${custom.html}\
+[](fg:purple)\
+$cmd_duration\
+$line_break\
+$character"""
+
+add_newline = true
+
+[os]
+disabled = false
+style = "bg:blue fg:black bold"
+format = "[ $symbol]($style)"
+
+[os.symbols]
+Arch = " "
+CachyOS = " "
+Linux = " "
+
+[username]
+show_always = true
+style_user = "bg:blue fg:black bold"
+style_root = "bg:blue fg:red bold"
+format = "[$user ]($style)"
+
+[directory]
+style = "bg:cyan fg:black bold"
+format = "[  $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = "~"
+
+[directory.substitutions]
+"Documentos" = "󰈙 Documentos"
+"Descargas" = " Descargas"
+"Imágenes" = " Imágenes"
+"Música" = " Música"
+
+[git_branch]
+symbol = ""
+style = "bg:green fg:black bold"
+format = "[ $symbol $branch ]($style)"
+
+[git_status]
+style = "bg:green fg:black bold"
+format = "[($all_status$ahead_behind )]($style)"
+
+[python]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) (\\($virtualenv\\) )]($style)"
+
+[c]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[cpp]
+symbol = ""
+disabled = false
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[dotnet]
+symbol = "󰌛"
+detect_extensions = ["cs", "csproj", "fsproj", "sln"]
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[nodejs]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[deno]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[java]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[lua]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[rust]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[golang]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[php]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[ruby]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[kotlin]
+symbol = ""
+style = "bg:purple fg:black bold"
+format = "[ $symbol ($version) ]($style)"
+
+[custom.html]
+detect_extensions = ["html", "htm", "css"]
+style = "bg:purple fg:black bold"
+format = "[  HTML ]($style)"
+
+[cmd_duration]
+min_time = 2000
+style = "fg:yellow"
+format = "[  $duration]($style)"
+
+[character]
+success_symbol = "[❯](bold cyan)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"

@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-players="$(playerctl -l 2>/dev/null | grep -v '^plasma-browser-integration$' || true)"
-[ -z "${players}" ] && exit 0
+all="$(playerctl -l 2>/dev/null || true)"
+[ -z "${all}" ] && exit 0
 
-# Si alguno está reproduciendo, usa ese
+# plasma-browser-integration primero: tiene artUrl y metadata completa del navegador
+priority="$(echo "$all" | grep '^plasma-browser-integration$' || true)"
+rest="$(echo "$all" | grep -v '^plasma-browser-integration$' || true)"
+players="$(printf '%s\n%s' "$priority" "$rest" | sed '/^$/d')"
+
+# Si alguno está reproduciendo, usa ese (con prioridad al orden arriba)
 while read -r p; do
   st="$(playerctl -p "$p" status 2>/dev/null || true)"
   if [ "$st" = "Playing" ]; then

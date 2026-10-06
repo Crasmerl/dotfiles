@@ -1,0 +1,3 @@
+Colores para Firefox (Pywalfox) y Discord (Vesktop). Lo usa ~/.local/bin/colores-fondo:
+  *-fondo.*   = los genera Noctalia con los colores del fondo (user-templates.toml)
+  *-siempre.* = turquesa de siempre (para background.png); hechos a mano con la paleta de Kitty

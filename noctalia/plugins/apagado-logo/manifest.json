@@ -1,0 +1,19 @@
+{
+  "id": "apagado-logo",
+  "name": "Apagado con logo",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "crasmerl",
+  "license": "MIT",
+  "description": "Botón del menú de apagado (como SessionMenu) pero con una imagen propia.",
+  "tags": ["Bar"],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "dependencies": { "plugins": [] },
+  "metadata": {
+    "defaultSettings": {
+      "imagen": "~/.config/noctalia/iconos/logo-cuadrado.png"
+    }
+  }
+}

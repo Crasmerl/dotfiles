@@ -6,22 +6,17 @@ open = [
   { run = "xdg-open %s", orphan = true, desc = "Open" }
 ]
 image = [
-  { run = "swayimg %s", orphan = true }
+  { run = "swayimg -e 'swayimg.viewer.set_default_scale(\"fit\")' %s", orphan = true }
 ]
 
 [open]
 prepend_rules = [
   { mime = "image/*", use = "image" },
-
   { mime = "text/*", use = "edit" },
-  { name = "*.md", use = "edit" },
-  { name = "*.json", use = "edit" },
-  { name = "*.yaml", use = "edit" },
-  { name = "*.yml", use = "edit" },
-  { name = "*.toml", use = "edit" },
-  { name = "*.ini", use = "edit" },
-  { name = "*.conf", use = "edit" },
+  { mime = "application/json", use = "edit" },
+  { mime = "application/toml", use = "edit" },
+  { mime = "application/x-yaml", use = "edit" },
 ]
 append_rules = [
-  { name = "*", use = "open" }
+  { mime = "*", use = "open" }
 ]

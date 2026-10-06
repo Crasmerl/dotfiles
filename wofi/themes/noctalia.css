@@ -1,0 +1,91 @@
+/* Generado por Noctalia desde ~/.config/noctalia/plantillas/wofi.css (copia de style.css con colores del fondo) */
+* {
+  font-family: 'SpaceMono Nerd Font', monospace;
+  font-size: 16px;
+  color: #ede0dd;
+}
+
+/* Window */
+window {
+  margin: 0px;
+  padding: 12px;
+  border: 2px solid #ffb4a7;
+  border-radius: 12px;
+  background-color: rgba(24,18,17, 0.75);
+}
+
+/* Outer Box */
+#outer-box {
+  margin: 4px;
+  padding: 8px;
+  border: none;
+  background: transparent;
+}
+
+/* Inner Box */
+#inner-box {
+  margin: 4px;
+  padding: 4px;
+  border: none;
+  background: transparent;
+}
+
+/* Scroll */
+#scroll {
+  margin: 0px;
+  padding: 4px;
+  border: none;
+  background: transparent;
+}
+
+/* Input */
+#input {
+  margin: 4px 8px 10px 8px;
+  padding: 8px 12px;
+  border: 1px solid #ffb4a7;
+  border-radius: 8px;
+  color: #ede0dd;
+  background-color: rgba(24,18,17, 0.6);
+  outline: none;
+}
+
+#input image {
+  border: none;
+  color: #ffb4a7;
+}
+
+#input * {
+  outline: none !important;
+}
+
+/* Entry */
+#entry {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: transparent;
+}
+
+#entry:selected {
+  background-color: rgba(255,180,167, 0.15);
+  border: 1px solid rgba(255,180,167, 0.5);
+  border-radius: 6px;
+}
+
+/* Text */
+#text {
+  margin: 2px 6px;
+  color: #ede0dd;
+}
+
+#entry:selected #text {
+  color: #ffdad4;
+}
+
+#entry arrow {
+  border: none;
+  color: #ffb4a7;
+}
+
+#entry:drop(active) {
+  background-color: rgba(255,180,167, 0.3) !important;
+}

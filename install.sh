@@ -156,6 +156,28 @@ if [[ -d "$DOTFILES_DIR/yazi" ]]; then
   create_symlink "$DOTFILES_DIR/yazi" "$HOME/.config/yazi" "yazi config"
 fi
 
+# fish shell
+if [[ -d "$DOTFILES_DIR/fish" ]]; then
+  create_symlink "$DOTFILES_DIR/fish" "$HOME/.config/fish" "fish config"
+fi
+
+# starship prompt
+if [[ -f "$DOTFILES_DIR/starship/starship.toml" ]]; then
+  create_symlink "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml" "starship config"
+fi
+
+# tmux
+if [[ -f "$DOTFILES_DIR/tmux/tmux.conf" ]]; then
+  create_symlink "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.tmux.conf" "tmux config"
+fi
+
+# Noctalia shell (copia, no enlace: Noctalia reescribe su settings.json)
+if [[ "$OS" == "linux" && -d "$DOTFILES_DIR/noctalia" ]]; then
+  mkdir -p "$HOME/.config/noctalia"
+  cp -rn "$DOTFILES_DIR/noctalia/." "$HOME/.config/noctalia/"
+  echo -e "${GREEN}✓${NC} Noctalia config copied"
+fi
+
 # Zsh configuration
 echo -e "\n${BLUE}🐚 Installing Zsh configuration...${NC}"
 if [[ -f "$DOTFILES_DIR/zsh/zshrc" ]]; then

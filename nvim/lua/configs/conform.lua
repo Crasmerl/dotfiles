@@ -1,6 +1,7 @@
 local options = {
   formatters_by_ft = {
-    lua = { "stylua" },
+    python = { "ruff_format" },
+    -- lua = { "stylua" }, -- instalar con: paru -S stylua
     -- css = { "prettier" },
     -- html = { "prettier" },
   },

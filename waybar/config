@@ -17,7 +17,6 @@
   "modules-right": [
     "custom/swaync",
     "tray",
-    "group/wifi",
     "idle_inhibitor",
     "pulseaudio",
     "group/system",

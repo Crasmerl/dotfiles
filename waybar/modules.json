@@ -40,9 +40,11 @@
     "on-click": "pavucontrol"
   },
   "network": {
-    "format-wifi": "",
-    "format-ethernet": "",
-    "format-disconnected": "⚠"
+    "interface": "wlan0",
+    "format-wifi": "",
+    "format-ethernet": "",
+    "format-disconnected": "⚠",
+    "on-click-right": "nm-applet --indicator"
   },
   "group/system": {
     "orientation": "horizontal",
@@ -129,6 +131,7 @@
     ]
   },
   "network#ssid": {
+    "interface": "wlan0",
     "format-wifi": "{essid} ({signalStrength}%)",
     "format-ethernet": "{ipaddr}/{cidr}",
     "format-disconnected": "Disconnected",

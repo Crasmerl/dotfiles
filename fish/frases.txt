@@ -1,0 +1,34 @@
+Miku|おかえりなさい！ — ¡Bienvenido a casa!
+Miku|今日も一緒にがんばろう！ — ¡Hoy también nos esforzamos juntos!
+Miku|ネギ食べた？ — ¿Has comido puerro hoy?
+Miku|♪ Hoy suena: World is Mine
+Miku|♪ Hoy suena: Senbonzakura
+Miku|♪ Hoy suena: Rolling Girl
+Miku|♪ Hoy suena: Melt
+Miku|コードは歌だよ — El código también es una canción
+Miku|エラーなんて怖くない！ — ¡Los errores no dan miedo!
+Miku|39 = みく — Gracias por estar aquí (サンキュー!)
+Teto|フランスパン、持ってきた？ — ¿Has traído la baguette?
+Teto|私は31歳です。…本当だよ！ — Tengo 31 años. ¡Es verdad!
+Teto|♪ Hoy suena: Kasane Territory
+Teto|♪ Hoy suena: Fukkireta
+Teto|♪ Hoy suena: Liar Dancer
+Teto|ドリルツインテール、準備完了！ — ¡Coletas taladro listas!
+Teto|がんばってね、マスター！ — ¡Ánimo, master!
+Teto|今日もバグを退治しよう — Hoy también cazamos bugs
+Rin|みかん食べる？ — ¿Una mandarina?
+Rin|♪ Hoy suena: Meltdown
+Rin|ロードローラーだッ！ — ¡Es una apisonadora!
+Len|バナナ！ — ¡Plátano!
+Len|♪ Hoy suena: Servant of Evil
+Adachi Rei|Sé que tu canción favorita es Heat Abnormal (熱異常) ♪
+Adachi Rei|♪ Hoy suena: Heat Abnormal (熱異常)
+Adachi Rei|システム起動完了。おはようございます — Sistema iniciado. Buenos días
+Adachi Rei|Temperatura del núcleo: normal. …Por ahora 🌡️
+Adachi Rei|Batería al 100 %. Lista para cantar
+Adachi Rei|エラー？ 私じゃないよ — ¿Un error? No he sido yo
+Adachi Rei|Escaneando usuario… Resultado: alguien con muy buen gusto musical
+Adachi Rei|No tengo corazón, pero tengo un ventilador que va a tope por ti
+Adachi Rei|01001000 01101111 01101100 01100001 — (Hola, en binario)
+Adachi Rei|Recordatorio: los robots no duermen, pero tú sí deberías
+Adachi Rei|再起動しますか？ — ¿Reiniciamos? …Mejor no, que se está bien aquí
