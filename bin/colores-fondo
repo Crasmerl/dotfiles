@@ -72,7 +72,7 @@ case "$(basename "${fondo,,}")" in
     *adachi*) icono=$'' ;;
     *)        icono=$'\U000f117d' ;;
 esac
-sed -i -E "s/^(Arch|CachyOS|Linux) = \".*\"$/\1 = \"$icono \"/" ~/.config/starship.toml
+sed --follow-symlinks -i -E "s/^(Arch|CachyOS|Linux) = \".*\"$/\1 = \"$icono \"/" ~/.config/starship.toml
 
 # Recargar las apps abiertas
 pkill -USR1 -x kitty
