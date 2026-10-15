@@ -1,0 +1,50 @@
+#!/bin/bash
+# Cambia entre Noctalia 4 (qs -c noctalia-shell) y Noctalia 5 (noctalia).
+#   noctalia-cambiar 5   -> pasa a la nueva
+#   noctalia-cambiar 4   -> vuelve a la vieja
+# La config de la 5 se guarda en ~/.config/noctalia-v5/noctalia/*.toml y se copia a ~/.config/noctalia.
+
+N=~/.config/noctalia
+V5=~/.config/noctalia-v5/noctalia
+HYPR=~/.config/hypr/hyprland.conf
+IDLE=~/.config/hypr/hypridle.conf
+LOCK4='qs -c noctalia-shell ipc call lockScreen lock'
+LOCK5='noctalia msg session lock'
+
+reiniciar_audio() {
+    pkill -f hypr/scripts/wallpaper-audio.sh
+    hyprctl dispatch exec ~/.config/hypr/scripts/wallpaper-audio.sh >/dev/null
+}
+
+case "$1" in
+5)
+    command -v noctalia >/dev/null || { echo "Falta instalar: sudo pacman -S noctalia"; exit 1; }
+    cp "$V5"/*.toml "$N"/
+    # La 5 lee todos los .toml de la carpeta: el de plantillas de la 4 se aparta
+    [ -f "$N/user-templates.toml" ] && mv "$N/user-templates.toml" "$N/user-templates.toml.v4"
+    sed -i "s|^exec-once = qs -c noctalia-shell|exec-once = noctalia|; s|$LOCK4|$LOCK5|" "$HYPR"
+    sed -i "s|$LOCK4|$LOCK5|" "$IDLE"
+    sed -i "s|^exec-once = waycorner  # esquina|# exec-once = waycorner  # (ahora lo hace Noctalia 5: [hot_corners]) esquina|" "$HYPR"; pkill -x waycorner
+    pkill -x qs; sleep 1
+    hyprctl dispatch exec noctalia >/dev/null
+    pkill -x hypridle; hyprctl dispatch exec hypridle >/dev/null
+    sleep 3; reiniciar_audio
+    echo "Noctalia 5 en marcha. Para volver: noctalia-cambiar 4"
+    ;;
+4)
+    # Guarda los cambios hechos a mano en la config de la 5 antes de quitarla
+    for f in "$N"/*.toml; do [ "$(basename "$f")" != user-templates.toml ] && mv "$f" "$V5"/; done
+    [ -f "$N/user-templates.toml.v4" ] && mv "$N/user-templates.toml.v4" "$N/user-templates.toml"
+    sed -i "s|^exec-once = noctalia$|exec-once = qs -c noctalia-shell|; s|$LOCK5|$LOCK4|" "$HYPR"
+    sed -i "s|$LOCK5|$LOCK4|" "$IDLE"
+    sed -i "s|^# exec-once = waycorner  # (ahora lo hace Noctalia 5: \[hot_corners\]) esquina|exec-once = waycorner  # esquina|" "$HYPR"; hyprctl dispatch exec waycorner >/dev/null
+    pkill -x noctalia; sleep 1
+    hyprctl dispatch exec "qs -c noctalia-shell" >/dev/null
+    pkill -x hypridle; hyprctl dispatch exec hypridle >/dev/null
+    sleep 3; reiniciar_audio
+    echo "Noctalia 4 en marcha otra vez."
+    ;;
+*)
+    echo "Uso: noctalia-cambiar 5   (o 4 para volver)"
+    ;;
+esac

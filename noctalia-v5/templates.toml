@@ -1,0 +1,52 @@
+# Plantillas propias: Noctalia genera estos archivos con los colores de cada fondo.
+# Que se usen o no lo decide ~/.local/bin/colores-fondo (con background.png no se usan).
+# Las plantillas están en ~/.config/noctalia/plantillas (las de kitty, btop, cava, GTK,
+# pywalfox y discord son copias de las que traía Noctalia 4).
+
+[theme.templates]
+enable_builtin_templates = false
+enable_community_templates = false
+
+[theme.templates.user.kitty-fondo]
+input_path = "~/.config/noctalia/plantillas/kitty.conf"
+output_path = "~/.config/kitty/themes/noctalia.conf"
+
+[theme.templates.user.btop-fondo]
+input_path = "~/.config/noctalia/plantillas/btop.theme"
+output_path = "~/.config/btop/themes/noctalia.theme"
+
+[theme.templates.user.cava-fondo]
+input_path = "~/.config/noctalia/plantillas/cava.ini"
+output_path = "~/.config/cava/themes/noctalia"
+
+[theme.templates.user.gtk3-fondo]
+input_path = "~/.config/noctalia/plantillas/gtk3.css"
+output_path = "~/.config/gtk-3.0/noctalia.css"
+
+[theme.templates.user.gtk4-fondo]
+input_path = "~/.config/noctalia/plantillas/gtk4.css"
+output_path = "~/.config/gtk-4.0/noctalia.css"
+
+[theme.templates.user.hypr-borde-fondo]
+input_path = "~/.config/noctalia/plantillas/hypr-borde.conf"
+output_path = "~/.config/hypr/themes/noctalia-borde.conf"
+
+[theme.templates.user.wofi-fondo]
+input_path = "~/.config/noctalia/plantillas/wofi.css"
+output_path = "~/.config/wofi/themes/noctalia.css"
+
+[theme.templates.user.nvim-fondo]
+input_path = "~/.config/noctalia/plantillas/nvim.lua"
+output_path = "~/.config/nvim/themes/noctalia.lua"
+
+[theme.templates.user.tmux-fondo]
+input_path = "~/.config/noctalia/plantillas/tmux.conf"
+output_path = "~/.config/tmux/themes/noctalia.conf"
+
+[theme.templates.user.pywalfox-fondo]
+input_path = "~/.config/noctalia/plantillas/pywalfox.json"
+output_path = "~/.config/noctalia/colores-apps/pywalfox-fondo.json"
+
+[theme.templates.user.discord-fondo]
+input_path = "~/.config/noctalia/plantillas/discord.css"
+output_path = "~/.config/noctalia/colores-apps/discord-fondo.css"

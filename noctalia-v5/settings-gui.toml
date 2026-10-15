@@ -1,0 +1,170 @@
+config_version = 14
+
+[accessibility]
+ui_scale = 0.85000000521540642
+
+[bar]
+order = [ "main" ]
+
+    [bar.main]
+    capsule = true
+    capsule_opacity = 0.669999985024333
+    compositor_blur = false
+    contact_shadow = true
+    padding = 11
+    scale = 0.80000000447034836
+    shadow = false
+    thickness = 22
+
+[battery]
+warning_threshold = 15
+
+    [battery.device."/org/freedesktop/UPower/devices/mouse_hidpp_battery_0"]
+    warning_threshold = 10
+
+[control_center]
+width = 600
+
+[desktop_widgets]
+schema_version = 2
+widget_order = [ "reloj", "tiempo", "musica" ]
+
+    [desktop_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = false
+
+    [desktop_widgets.widget.musica]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 160.0
+    cy = 200.0
+    output = "eDP-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "media_player"
+
+        [desktop_widgets.widget.musica.settings]
+        background = true
+        background_opacity = 0.10000000000000001
+        hide_when_no_media = true
+
+    [desktop_widgets.widget.reloj]
+    box_height = 80.0
+    box_width = 144.0
+    cx = 88.0
+    cy = 84.0
+    output = "eDP-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "clock"
+
+        [desktop_widgets.widget.reloj.settings]
+        background = true
+        background_opacity = 0.10000000000000001
+        font_family = "SpaceMono Nerd Font"
+        format = """{:%H:%M
+%e %B %Y}"""
+
+    [desktop_widgets.widget.tiempo]
+    box_height = 80.0
+    box_width = 128.0
+    cx = 235.04998779296875
+    cy = 84.0
+    output = "eDP-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "weather"
+
+        [desktop_widgets.widget.tiempo.settings]
+        background = true
+        background_opacity = 0.10000000000000001
+
+[dock]
+auto_hide = true
+background_opacity = 0.0
+enabled = true
+icon_size = 22
+inactive_opacity = 0.2799999937415123
+launcher_position = "end"
+layer = "overlay"
+reserve_space = false
+show_dots = true
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@eDP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 960.0
+    cy = 898.0
+    output = "eDP-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[shell]
+corner_radius_scale = 2.0
+input_borders = false
+
+    [shell.panel]
+    borders = false
+    clipboard_placement = "attached"
+    open_near_click_control_center = true
+    open_near_click_launcher = true
+    polkit_placement = "attached"
+    transparency_mode = "glass"
+
+[theme]
+
+[wallpaper.default]
+path = "/home/crasmerl/Imágenes/Fondos/Adachi.Rei.full.4672443.jpg"
+
+[wallpaper.last]
+path = "/home/crasmerl/Imágenes/Fondos/Adachi.Rei.full.4672443.jpg"
+
+[wallpaper.monitors.eDP-1]
+path = "/home/crasmerl/Imágenes/Fondos/Adachi.Rei.full.4672443.jpg"
+
+[[wallpaper.favorite]]
+path = "/home/crasmerl/Imágenes/Fondos/background.png"
+
+[[wallpaper.favorite]]
+path = "/home/crasmerl/Imágenes/Fondos/adachirei.png"
+
+[[wallpaper.favorite]]
+path = "/home/crasmerl/Imágenes/Fondos/teto_e_miku_dreamcore_wallpaper_pc_by_kasanetetobrasil_dm9afyy.png"
+
+[[wallpaper.favorite]]
+palette_source = "wallpaper"
+path = "/home/crasmerl/Imágenes/Fondos/Adachi.Rei.full.4672443.jpg"
+theme_mode = "dark"
+wallpaper_scheme = "m3-tonal-spot"

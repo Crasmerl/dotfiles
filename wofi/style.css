@@ -1,0 +1,90 @@
+* {
+  font-family: 'SpaceMono Nerd Font', monospace;
+  font-size: 16px;
+  color: #E6FFFC;
+}
+
+/* Window */
+window {
+  margin: 0px;
+  padding: 12px;
+  border: 2px solid #40E0CF;
+  border-radius: 12px;
+  background-color: rgba(12, 26, 25, 0.75);
+}
+
+/* Outer Box */
+#outer-box {
+  margin: 4px;
+  padding: 8px;
+  border: none;
+  background: transparent;
+}
+
+/* Inner Box */
+#inner-box {
+  margin: 4px;
+  padding: 4px;
+  border: none;
+  background: transparent;
+}
+
+/* Scroll */
+#scroll {
+  margin: 0px;
+  padding: 4px;
+  border: none;
+  background: transparent;
+}
+
+/* Input */
+#input {
+  margin: 4px 8px 10px 8px;
+  padding: 8px 12px;
+  border: 1px solid #40E0CF;
+  border-radius: 8px;
+  color: #E6FFFC;
+  background-color: rgba(12, 26, 25, 0.6);
+  outline: none;
+}
+
+#input image {
+  border: none;
+  color: #40E0CF;
+}
+
+#input * {
+  outline: none !important;
+}
+
+/* Entry */
+#entry {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: transparent;
+}
+
+#entry:selected {
+  background-color: rgba(64, 224, 207, 0.15);
+  border: 1px solid rgba(64, 224, 207, 0.5);
+  border-radius: 6px;
+}
+
+/* Text */
+#text {
+  margin: 2px 6px;
+  color: #E6FFFC;
+}
+
+#entry:selected #text {
+  color: #9BF4EA;
+}
+
+#entry arrow {
+  border: none;
+  color: #40E0CF;
+}
+
+#entry:drop(active) {
+  background-color: rgba(64, 224, 207, 0.3) !important;
+}

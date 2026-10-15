@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# Modo silencioso para los ventiladores (nbfc) con botón en Noctalia.
+#   modo-silencioso toggle  -> activa / desactiva
+#   modo-silencioso estado  -> JSON para el botón de Noctalia
+# Curva silenciosa (si pasa de LIMITE grados, vuelve a la curva normal hasta bajar de VUELTA).
+
+LIMITE=78
+VUELTA=70
+DIR="${XDG_RUNTIME_DIR:-/tmp}"
+PID="$DIR/modo-silencioso.pid"
+EST="$DIR/modo-silencioso.estado"
+
+temperatura() { nbfc status 2>/dev/null | awk -F: '/Temperature/ {printf "%d", $2; exit}'; }
+
+velocidad() {   # temperatura -> % de ventilador en modo silencioso
+    local t=$1
+    if   (( t < 60 )); then echo 15
+    elif (( t < 70 )); then echo 25
+    else                    echo 40
+    fi
+}
+
+activo() { [[ -f $PID ]] && kill -0 "$(cat "$PID")" 2>/dev/null; }
+
+bucle() {
+    echo $$ > "$PID"
+    trap 'nbfc set -a; rm -f "$PID" "$EST"; exit 0' TERM INT
+    local proteccion=0 ultima=""
+    while true; do
+        t=$(temperatura)
+        [[ -z $t ]] && { sleep 3; continue; }
+        if (( t >= LIMITE )); then proteccion=1; fi
+        if (( proteccion && t < VUELTA )); then proteccion=0; ultima=""; fi
+        if (( proteccion )); then
+            [[ $ultima != auto ]] && nbfc set -a && ultima=auto
+            echo "proteccion $t" > "$EST"
+        else
+            v=$(velocidad "$t")
+            [[ $ultima != "$v" ]] && nbfc set -s "$v" && ultima=$v
+            echo "silencio $t $v" > "$EST"
+        fi
+        sleep 3
+    done
+}
+
+case "$1" in
+    toggle)
+        if activo; then
+            kill "$(cat "$PID")"
+        else
+            setsid "$0" bucle >/dev/null 2>&1 < /dev/null &
+        fi
+        ;;
+    bucle) bucle ;;
+    estado)
+        t=$(temperatura)
+        if activo; then
+            read -r modo _ v < "$EST" 2>/dev/null
+            if [[ $modo == proteccion ]]; then
+                echo "{\"icon\":\"propeller\",\"text\":\"\",\"color\":\"error\",\"tooltip\":\"Modo silencioso: ${t}°C, demasiado calor, curva normal hasta bajar de ${VUELTA}°C\"}"
+            else
+                echo "{\"icon\":\"propeller-off\",\"text\":\"\",\"color\":\"primary\",\"tooltip\":\"Modo silencioso ACTIVADO (${t}°C, ventiladores al ${v:-?}%). Clic para volver a normal\"}"
+            fi
+        else
+            echo "{\"icon\":\"propeller\",\"text\":\"\",\"tooltip\":\"Ventiladores en modo normal (${t}°C). Clic para modo silencioso\"}"
+        fi
+        ;;
+    *) echo "Uso: $0 toggle | estado" ;;
+esac

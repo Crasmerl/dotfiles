@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+"""Esquina activa (arriba a la izquierda): esconde todas las ventanas del escritorio actual
+sin cambiar de escritorio (las guarda en special:escondidas-<ws>). Al repetir, vuelven
+a su sitio reconstruyendo el mosaico (misma idea que ~/.local/bin/ventanas-flotantes)."""
+import json, os, subprocess, time
+
+RUN = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
+
+def hypr(*args):
+    return subprocess.run(["hyprctl", *args], capture_output=True, text=True).stdout
+
+def j(cmd):
+    return json.loads(hypr(cmd, "-j"))
+
+def batch(cmds):
+    if cmds:
+        hypr("--batch", ";".join(cmds))
+
+ESTIRAR = 1.15    # cuánto se estiran a lo ancho al irse (15 %)
+DURACION = 0.35   # segundos de animación (animation = windows, 4.79 en hyprland.conf)
+
+def fuera(geo, mon):
+    """Posición y tamaño fuera de la pantalla, por el lado más cercano y algo estirada."""
+    x, y, w, h = geo
+    mx, mw = mon["x"], mon["width"] / mon["scale"]
+    w2, h2 = round(w * ESTIRAR), round(h * 1.04)
+    y2 = y - (h2 - h) // 2
+    if x + w / 2 < mx + mw / 2:
+        return -w2 - 40 + mx, y2, w2, h2          # a la izquierda
+    return round(mx + mw) + 40, y2, w2, h2        # a la derecha
+
+def animaciones(si):
+    hypr("keyword", "animations:enabled", "1" if si else "0")
+
+def colocar(a, x, y, w, h):
+    return [f"dispatch resizewindowpixel exact {w} {h},address:{a}",
+            f"dispatch movewindowpixel exact {x} {y},address:{a}"]
+
+activo = j("activeworkspace")
+ws = activo["id"]
+mon = next(m for m in j("monitors") if m["name"] == activo["monitor"])
+especial = f"special:escondidas-{ws}"
+guardado = f"{RUN}/esconder-ventanas-{ws}.json"
+clientes = j("clients")
+escondidas = [c for c in clientes if c["workspace"]["name"] == especial and c["mapped"]]
+
+def esconder():
+    ventanas = [c for c in clientes if c["workspace"]["id"] == ws and c["mapped"] and not c["pinned"]]
+    if not ventanas:
+        return
+    geo = {c["address"]: (*c["at"], *c["size"]) for c in ventanas if not c["floating"]}
+    todas = {c["address"]: (*c["at"], *c["size"]) for c in ventanas}
+    with open(guardado, "w") as f:
+        json.dump({"geo": geo, "todas": todas, "activa": j("activewindow").get("address")}, f)
+    # Las de mosaico pasan a flotantes en su mismo sitio para que no se descoloquen
+    # (sin animaciones, para que no se vea ningún salto)
+    cmds = []
+    for a, (x, y, w, h) in geo.items():
+        cmds += [f"dispatch setfloating address:{a}",
+                 f"dispatch resizewindowpixel exact {w} {h},address:{a}",
+                 f"dispatch movewindowpixel exact {x} {y},address:{a}"]
+    animaciones(False)
+    try:
+        batch(cmds)
+    finally:
+        animaciones(True)
+    # Animación: se van hacia los lados estirándose
+    time.sleep(0.03)
+    batch([cmd for a, g in todas.items() for cmd in colocar(a, *fuera(g, mon))])
+    time.sleep(DURACION)
+    # Hyprland mete dentro de la pantalla las flotantes que cambian de escritorio:
+    # sin animaciones, para que no se vean desvanecerse
+    animaciones(False)
+    try:
+        batch([f"dispatch movetoworkspacesilent {especial},address:{c['address']}" for c in ventanas])
+    finally:
+        animaciones(True)
+
+def cortar(grupo, geo):
+    """Busca una línea vertical u horizontal que separe el grupo en dos (como hace dwindle)."""
+    for eje, dir_ in ((0, "r"), (1, "d")):
+        ordenadas = sorted(grupo, key=lambda a: geo[a][eje])
+        for i in range(1, len(ordenadas)):
+            a_, b_ = ordenadas[:i], ordenadas[i:]
+            fin_a = max(geo[a][eje] + geo[a][eje + 2] for a in a_)
+            ini_b = min(geo[b][eje] for b in b_)
+            if fin_a <= ini_b:
+                return a_, b_, dir_
+    return None
+
+def reconstruir(grupo, hoja, geo, conocidas, cmds):
+    """Añade a cmds los pasos para rehacer el mosaico (se mandan todos de golpe)."""
+    if len(grupo) <= 1:
+        return
+    corte = cortar(grupo, geo)
+    if not corte:                      # no se puede reconstruir: se meten tal cual
+        for a in grupo:
+            if a not in conocidas:
+                cmds += [f"dispatch focuswindow address:{hoja}", f"dispatch settiled address:{a}"]
+                conocidas.add(a)
+        return
+    g1, g2, d = corte
+    if hoja in g2:                     # la ventana ya colocada está a la derecha/abajo
+        w2 = g1[0]
+        d = {"r": "l", "d": "u"}[d]
+        g1, g2 = g2, g1
+    else:
+        w2 = g2[0]
+    cmds += [f"dispatch focuswindow address:{hoja}", f"dispatch layoutmsg preselect {d}",
+             f"dispatch settiled address:{w2}"]
+    conocidas.add(w2)
+    reconstruir(g1, hoja, geo, conocidas, cmds)
+    reconstruir(g2, w2, geo, conocidas, cmds)
+
+def mostrar():
+    try:
+        with open(guardado) as f:
+            datos = json.load(f)
+    except (OSError, ValueError):
+        datos = {}
+    presentes = {c["address"] for c in escondidas}
+    geo = {a: tuple(g) for a, g in datos.get("geo", {}).items() if a in presentes}
+    guardadas = datos.get("todas", {})
+    todas = {c["address"]: tuple(guardadas.get(c["address"], (*c["at"], *c["size"]))) for c in escondidas}
+    # Animación: se ponen fuera de la pantalla (aún escondidas), aparecen y entran desde los lados
+    # (sin animaciones: al cambiar de escritorio Hyprland las mete dentro de la pantalla)
+    animaciones(False)
+    try:
+        batch([f"dispatch movetoworkspacesilent {ws},address:{c['address']}" for c in escondidas] +
+              [cmd for a, g in todas.items() for cmd in colocar(a, *fuera(g, mon))])
+    finally:
+        animaciones(True)
+    time.sleep(0.03)
+    batch([cmd for a, g in todas.items() for cmd in colocar(a, *g)])
+    time.sleep(DURACION)
+    animaciones(False)   # el mosaico se rehace sin animaciones: ya están en su sitio
+    try:
+        rehacer_mosaico(geo)
+    finally:
+        animaciones(True)
+    if datos.get("activa") in presentes:
+        batch([f"dispatch focuswindow address:{datos['activa']}"])
+    try:
+        os.remove(guardado)
+    except OSError:
+        pass
+
+def rehacer_mosaico(geo):
+    if not geo:
+        return
+    orden = sorted(geo, key=lambda a: (geo[a][0], geo[a][1]))
+    primera = orden[0]
+    cmds = [f"dispatch settiled address:{primera}"]
+    reconstruir(orden, primera, geo, {primera}, cmds)
+    # Ajustar tamaños exactos (varias pasadas: cada una corrige a sus vecinas)
+    for _ in range(4):
+        cmds += [f"dispatch resizewindowpixel exact {g[2]} {g[3]},address:{a}" for a, g in geo.items()]
+    batch(cmds)   # todo en una sola orden: Hyprland no pinta los pasos intermedios
+
+if escondidas:
+    mostrar()
+else:
+    esconder()

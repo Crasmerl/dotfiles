@@ -1,0 +1,221 @@
+# Noctalia 5 — pasado desde la config de la 4.x (settings.json) el 2026-10-14.
+# Los cambios hechos desde la ventana de Ajustes se guardan en
+# ~/.local/state/noctalia/settings.toml y mandan sobre este archivo.
+
+[shell]
+font_family = "SpaceMono Nerd Font"
+lang = "es"
+avatar_path = "/home/crasmerl/Descargas/lock.jpg"
+settings_window_translucent = true   # ventana de Ajustes transparente (glass)
+
+[shell.panel]
+control_center_placement = "floating"   # separado de la barra, todo redondeado
+
+# ---------------------------------------------------------------- Barra
+[bar]
+order = ["main"]
+
+[bar.main]
+position = "top"
+thickness = 24
+scale = 0.9              # tamaño de iconos y texto
+background_opacity = 0.0
+radius = 12
+margin_edge = 3          # >0 = barra flotante
+margin_ends = 7
+widget_spacing = 6
+font_family = "SpaceMono Nerd Font"
+capsule = false
+start  = ["session", "workspaces", "actualizaciones", "atajos"]
+center = ["active_window", "media", "letras"]
+end    = ["tray", "cpu", "temperatura", "ventiladores", "notifications", "volume",
+          "brightness", "control-center", "fondo-video", "herramientas", "clock",
+          "privacy", "battery"]
+
+# Botón de apagado con tu logo (antes: plugin apagado-logo)
+[widget.session]
+custom_image = "/home/crasmerl/.config/noctalia/iconos/logo-cuadrado.png"
+custom_image_colorize = false
+
+[widget.workspaces]
+show_labels = true
+label_source = "id"
+focused_color = "primary"
+empty_color = "secondary"
+
+[widget.active_window]
+max_length = 145
+title_scroll = "on_hover"
+
+[widget.media]
+max_length = 145
+artist_first = true
+hide_when_no_media = true
+
+[widget.tray]
+drawer = true
+
+[widget.cpu]
+type = "sysmon"
+stat = "cpu_usage"
+
+[widget.temperatura]
+type = "sysmon"
+stat = "cpu_temp"
+
+# Modo silencioso de los ventiladores (nbfc)
+[widget.ventiladores]
+type = "custom_button"
+glyph = "propeller"
+tooltip = "Ventiladores"
+
+[widget.ventiladores.actions]
+left = "exec ~/.local/bin/modo-silencioso toggle"
+
+[widget.volume.actions]
+middle = "exec pwvucontrol || pavucontrol"
+
+[widget.clock]
+format = "{:%H:%M %a, %d %b}"
+
+[widget.battery]
+display_mode = "graphic"
+
+# Widgets de plugins
+[widget.actualizaciones]
+type = "yuuto/arch-updater:widget"
+
+[widget.atajos]
+type = "kenn/keybind-cheatsheet:keybinds"
+
+[widget.letras]
+type = "h465855hgg/lyrics:lyrics"
+hide_when_no_lyrics = true   # no mostrar "No lyrics available"
+hide_when_paused = true
+
+[widget.fondo-video]
+type = "noctalia/mpvpaper:mpvpaper"
+
+[widget.herramientas]
+type = "alexander/screen-toolkit:widget"
+
+# ---------------------------------------------------------------- Plugins
+[plugins]
+enabled = [
+  "noctalia/mpvpaper",
+  "kenn/keybind-cheatsheet",
+  "h465855hgg/lyrics",
+  "alexander/screen-toolkit",
+  "yuuto/arch-updater",
+]
+auto_update = "none"
+
+[plugin_settings."noctalia/mpvpaper"]
+video_directory = "/home/crasmerl/Videos"
+mute = true
+
+# ---------------------------------------------------------------- Colores
+[theme]
+mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "m3-tonal-spot"
+
+# ---------------------------------------------------------------- Fondo
+[wallpaper]
+enabled = true
+directory = "/home/crasmerl/Imágenes/Fondos"
+fill_mode = "crop"
+transition = ["stripes", "fade"]
+transition_duration = 1500
+
+[wallpaper.default]
+path = "/home/crasmerl/Imágenes/Fondos/wallhaven_3kv5l6.jpg"
+
+[[wallpaper.favorite]]
+path = "/home/crasmerl/Imágenes/Fondos/background.png"
+
+[[wallpaper.favorite]]
+path = "/home/crasmerl/Imágenes/Fondos/adachirei.png"
+
+[[wallpaper.favorite]]
+path = "/home/crasmerl/Imágenes/Fondos/teto_e_miku_dreamcore_wallpaper_pc_by_kasanetetobrasil_dm9afyy.png"
+
+# ---------------------------------------------------------------- Hooks
+# colores-fondo decide si las apps usan los colores del fondo o los de siempre
+[hooks]
+started = "~/.local/bin/colores-fondo"
+wallpaper_changed = "~/.local/bin/colores-fondo"
+colors_changed = "~/.local/bin/colores-fondo"
+
+# ---------------------------------------------------------------- Escritorio
+[desktop_widgets]
+enabled = true
+widget_order = ["reloj", "tiempo", "musica"]
+
+[desktop_widgets.widget.reloj]
+type = "clock"
+output = "eDP-1"
+cx = 90.0
+cy = 80.0
+
+[desktop_widgets.widget.reloj.settings]
+format = "{:%H:%M\n%e %B %Y}"
+font_family = "SpaceMono Nerd Font"
+background = true
+
+[desktop_widgets.widget.tiempo]
+type = "weather"
+output = "eDP-1"
+cx = 260.0
+cy = 80.0
+
+[desktop_widgets.widget.tiempo.settings]
+background = true
+
+[desktop_widgets.widget.musica]
+type = "media_player"
+output = "eDP-1"
+cx = 160.0
+cy = 200.0
+
+[desktop_widgets.widget.musica.settings]
+background = true
+hide_when_no_media = true
+
+# ---------------------------------------------------------------- Servicios
+[location]
+auto_locate = true
+
+[weather]
+enabled = true
+unit = "metric"
+effects = true
+
+[notification]
+position = "top_right"
+
+[osd]
+position = "top_right"
+
+[lockscreen]
+lock_before_suspend = true
+fingerprint = false
+
+[dock]
+enabled = true
+auto_hide = true
+launcher_position = "end"
+icon_size = 32          # por defecto 48
+magnification_scale = 1.3
+launcher_custom_image = "/usr/share/pixmaps/cachyos.png"   # logo de CachyOS, como en la 4.x
+launcher_custom_image_colorize = false
+
+# ---------------------------------------------------------------- Esquinas activas
+# Antes con waycorner: arriba a la izquierda esconde/muestra las ventanas
+[hot_corners]
+enabled = true
+delay_ms = 300   # hay que dejar el ratón un momento en la esquina
+
+[hot_corners.top_left]
+action = "command"
+command = "/home/crasmerl/.local/bin/esconder-ventanas"
