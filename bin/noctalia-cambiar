@@ -7,13 +7,23 @@
 N=~/.config/noctalia
 V5=~/.config/noctalia-v5/noctalia
 HYPR=~/.config/hypr/hyprland.conf
+HYPR_LUA=~/.config/hypr/hyprland.lua   # config en uso desde 2026-10-23 (el .conf queda de copia)
 IDLE=~/.config/hypr/hypridle.conf
 LOCK4='qs -c noctalia-shell ipc call lockScreen lock'
 LOCK5='noctalia msg session lock'
 
+# Lanza un programa desde Hyprland (con la config en Lua ya no vale el "exec" de antes)
+lanzar() {
+    if [ "$(hyprctl eval 'local _ = 1' 2>/dev/null)" = "ok" ]; then
+        hyprctl dispatch "hl.dsp.exec_cmd(\"$1\")" >/dev/null
+    else
+        hyprctl dispatch exec "$1" >/dev/null
+    fi
+}
+
 reiniciar_audio() {
     pkill -f hypr/scripts/wallpaper-audio.sh
-    hyprctl dispatch exec ~/.config/hypr/scripts/wallpaper-audio.sh >/dev/null
+    lanzar ~/.config/hypr/scripts/wallpaper-audio.sh
 }
 
 case "$1" in
@@ -24,10 +34,11 @@ case "$1" in
     [ -f "$N/user-templates.toml" ] && mv "$N/user-templates.toml" "$N/user-templates.toml.v4"
     sed -i "s|^exec-once = qs -c noctalia-shell|exec-once = noctalia|; s|$LOCK4|$LOCK5|" "$HYPR"
     sed -i "s|$LOCK4|$LOCK5|" "$IDLE"
+    sed -i 's|hl.exec_cmd("qs -c noctalia-shell")|hl.exec_cmd("noctalia")|; s|'"$LOCK4|$LOCK5"'|' "$HYPR_LUA"
     sed -i "s|^exec-once = waycorner  # esquina|# exec-once = waycorner  # (ahora lo hace Noctalia 5: [hot_corners]) esquina|" "$HYPR"; pkill -x waycorner
     pkill -x qs; sleep 1
-    hyprctl dispatch exec noctalia >/dev/null
-    pkill -x hypridle; hyprctl dispatch exec hypridle >/dev/null
+    lanzar noctalia
+    pkill -x hypridle; lanzar hypridle
     sleep 3; reiniciar_audio
     echo "Noctalia 5 en marcha. Para volver: noctalia-cambiar 4"
     ;;
@@ -37,10 +48,11 @@ case "$1" in
     [ -f "$N/user-templates.toml.v4" ] && mv "$N/user-templates.toml.v4" "$N/user-templates.toml"
     sed -i "s|^exec-once = noctalia$|exec-once = qs -c noctalia-shell|; s|$LOCK5|$LOCK4|" "$HYPR"
     sed -i "s|$LOCK5|$LOCK4|" "$IDLE"
-    sed -i "s|^# exec-once = waycorner  # (ahora lo hace Noctalia 5: \[hot_corners\]) esquina|exec-once = waycorner  # esquina|" "$HYPR"; hyprctl dispatch exec waycorner >/dev/null
+    sed -i 's|hl.exec_cmd("noctalia")|hl.exec_cmd("qs -c noctalia-shell")|; s|'"$LOCK5|$LOCK4"'|' "$HYPR_LUA"
+    sed -i "s|^# exec-once = waycorner  # (ahora lo hace Noctalia 5: \[hot_corners\]) esquina|exec-once = waycorner  # esquina|" "$HYPR"; lanzar waycorner
     pkill -x noctalia; sleep 1
-    hyprctl dispatch exec "qs -c noctalia-shell" >/dev/null
-    pkill -x hypridle; hyprctl dispatch exec hypridle >/dev/null
+    lanzar "qs -c noctalia-shell"
+    pkill -x hypridle; lanzar hypridle
     sleep 3; reiniciar_audio
     echo "Noctalia 4 en marcha otra vez."
     ;;

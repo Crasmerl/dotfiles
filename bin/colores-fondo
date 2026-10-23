@@ -2,13 +2,27 @@
 # Con background.png: todas las apps con sus colores de siempre.
 # Con cualquier otro fondo: kitty, btop, cava y GTK con los colores del fondo
 # (archivos que genera Noctalia desde ~/.config/noctalia/user-templates.toml).
-# Y también Firefox (Pywalfox), Discord (Vesktop), tmux (~/.config/tmux/colores-fondo.conf), Neovim (~/.config/nvim/colores-fondo.lua), el borde de las ventanas de Hyprland y wofi (enlace ~/.config/wofi/estilo-actual.css).
+# Y también Firefox (Pywalfox), Discord (Vesktop), tmux (~/.config/tmux/colores-fondo.conf), Neovim (~/.config/nvim/colores-fondo.lua), el borde de las ventanas de Hyprland (colores-fondo.conf o .lua según la config) y wofi (enlace ~/.config/wofi/estilo-actual.css).
 # Lo llaman los hooks de Noctalia (wallpaperChange con $1 = ruta; colorGeneration y startup sin nada).
 
 FONDO_FIJO="background.png"
 TEMA_BTOP="tokyo-night"   # tema de siempre de btop
 BORDE_ACTIVO="rgba(00FFEAee) rgba(40E0CFee) 45deg"   # borde de siempre (hyprland.conf)
 BORDE_INACTIVO="rgba(595959aa)"
+# ¿Hyprland está usando la config en Lua (hyprland.lua)? Solo entonces funciona "hyprctl eval"
+lua_hypr() { [ "$(hyprctl eval 'local _ = 1' 2>/dev/null)" = "ok" ]; }
+
+# Pone el borde de las ventanas en vivo. $1/$2 = borde activo/inactivo (formato .conf)
+# o, con la config en Lua, $1 = archivo .lua con el hl.config() del borde
+borde_hypr() {
+    if lua_hypr; then
+        hyprctl eval "$(grep -v '^\s*--' "$1")" >/dev/null   # sin comentarios: hyprctl toma "--" por una opción
+    else
+        hyprctl keyword general:col.active_border "$1" >/dev/null
+        hyprctl keyword general:col.inactive_border "$2" >/dev/null
+    fi
+}
+BORDE_LUA_SIEMPRE='hl.config({ general = { col = { active_border = { colors = { "rgba(00FFEAee)", "rgba(40E0CFee)" }, angle = 45 }, inactive_border = "rgba(595959aa)" } } })'
 TEMA_GTK="Breeze"             # tema GTK de siempre
 TEMA_GTK_FONDO="adw-gtk3-dark" # tema GTK con colores del fondo (paquete adw-gtk-theme)
 
@@ -33,11 +47,15 @@ if [ "$(basename "$fondo")" = "$FONDO_FIJO" ]; then
     : > ~/.config/kitty/colores-fondo.conf
     : > ~/.config/nvim/colores-fondo.lua
     : > ~/.config/hypr/colores-fondo.conf
+    : > ~/.config/hypr/colores-fondo.lua
     : > ~/.config/tmux/colores-fondo.conf
     tema_apps=siempre
     ln -sfn style.css ~/.config/wofi/estilo-actual.css
-    hyprctl keyword general:col.active_border "$BORDE_ACTIVO" >/dev/null
-    hyprctl keyword general:col.inactive_border "$BORDE_INACTIVO" >/dev/null
+    if lua_hypr; then
+        hyprctl eval "$BORDE_LUA_SIEMPRE" >/dev/null
+    else
+        borde_hypr "$BORDE_ACTIVO" "$BORDE_INACTIVO"
+    fi
     sed -i "s/^color_theme = .*/color_theme = \"$TEMA_BTOP\"/" ~/.config/btop/btop.conf
     sed -i '/^theme = "noctalia"/d' ~/.config/cava/config
     for v in 3 4; do sed -i '/noctalia\.css/d' ~/.config/gtk-$v.0/gtk.css; done
@@ -47,11 +65,16 @@ else
     cp ~/.config/kitty/themes/noctalia.conf ~/.config/kitty/colores-fondo.conf
     cp ~/.config/nvim/themes/noctalia.lua ~/.config/nvim/colores-fondo.lua
     cp ~/.config/hypr/themes/noctalia-borde.conf ~/.config/hypr/colores-fondo.conf
+    cp ~/.config/hypr/themes/noctalia-borde.lua ~/.config/hypr/colores-fondo.lua 2>/dev/null
     cp ~/.config/tmux/themes/noctalia.conf ~/.config/tmux/colores-fondo.conf 2>/dev/null
     tema_apps=fondo
     ln -sfn themes/noctalia.css ~/.config/wofi/estilo-actual.css
-    hyprctl keyword general:col.active_border "$(sed -n 's/.*col.active_border = //p' ~/.config/hypr/colores-fondo.conf)" >/dev/null
-    hyprctl keyword general:col.inactive_border "$(sed -n 's/.*col.inactive_border = //p' ~/.config/hypr/colores-fondo.conf)" >/dev/null
+    if lua_hypr; then
+        borde_hypr ~/.config/hypr/colores-fondo.lua
+    else
+        borde_hypr "$(sed -n 's/.*col.active_border = //p' ~/.config/hypr/colores-fondo.conf)" \
+                   "$(sed -n 's/.*col.inactive_border = //p' ~/.config/hypr/colores-fondo.conf)"
+    fi
     sed -i 's/^color_theme = .*/color_theme = "noctalia"/' ~/.config/btop/btop.conf
     grep -q '^theme = "noctalia"' ~/.config/cava/config || sed -i '/^\[color\]/a theme = "noctalia"' ~/.config/cava/config
     for v in 3 4; do

@@ -1,0 +1,17 @@
+--- service.luau
++++ service.luau
+@@ -1065,12 +1065,12 @@
+ local function modifiersFromMask(mask)
+   local result = {}
+   local bits = {
+-    { 1, "SHIFT" },
++    { 64, "SUPER" },
+     { 4, "CTRL" },
++    { 1, "SHIFT" },
+     { 8, "ALT" },
+     { 16, "MOD2" },
+     { 32, "MOD3" },
+-    { 64, "SUPER" },
+     { 128, "MOD5" },
+   }
+   mask = tonumber(mask) or 0

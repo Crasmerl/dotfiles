@@ -12,8 +12,36 @@ def hypr(*args):
 def j(cmd):
     return json.loads(hypr(cmd, "-j"))
 
+# Con la config en Lua (hyprland.lua) hyprctl ya no entiende las órdenes "dispatch ..."
+# de antes: se traducen a Lua y se mandan todas juntas con "hyprctl eval".
+LUA = hypr("eval", "local _ = 1").strip() == "ok"
+
+def a_lua(cmd):
+    """Traduce una orden "dispatch ..." del formato antiguo a un dispatcher de Lua."""
+    nombre, _, args = cmd.removeprefix("dispatch ").partition(" ")
+    if nombre in ("setfloating", "settiled"):
+        accion = "enable" if nombre == "setfloating" else "disable"
+        return f'hl.dsp.window.float({{ action = "{accion}", window = "{args}" }})'
+    if nombre in ("resizewindowpixel", "movewindowpixel"):
+        tam, ventana = args.removeprefix("exact ").split(",", 1)
+        x, y = tam.split()
+        f = "resize" if nombre == "resizewindowpixel" else "move"
+        return f'hl.dsp.window.{f}({{ x = {x}, y = {y}, window = "{ventana}" }})'
+    if nombre == "focuswindow":
+        return f'hl.dsp.focus({{ window = "{args}" }})'
+    if nombre == "layoutmsg":
+        return f'hl.dsp.layout("{args}")'
+    if nombre == "movetoworkspacesilent":
+        ws, ventana = args.split(",", 1)
+        return f'hl.dsp.window.move({{ workspace = "{ws}", follow = false, window = "{ventana}" }})'
+    raise ValueError(f"orden sin traducir: {cmd}")
+
 def batch(cmds):
-    if cmds:
+    if not cmds:
+        return
+    if LUA:
+        hypr("eval", "\n".join(f"hl.dispatch({a_lua(c)})" for c in cmds))
+    else:
         hypr("--batch", ";".join(cmds))
 
 ESTIRAR = 1.15    # cuánto se estiran a lo ancho al irse (15 %)
@@ -30,7 +58,10 @@ def fuera(geo, mon):
     return round(mx + mw) + 40, y2, w2, h2        # a la derecha
 
 def animaciones(si):
-    hypr("keyword", "animations:enabled", "1" if si else "0")
+    if LUA:
+        hypr("eval", f"hl.config({{ animations = {{ enabled = {'true' if si else 'false'} }} }})")
+    else:
+        hypr("keyword", "animations:enabled", "1" if si else "0")
 
 def colocar(a, x, y, w, h):
     return [f"dispatch resizewindowpixel exact {w} {h},address:{a}",

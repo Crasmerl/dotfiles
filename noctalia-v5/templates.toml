@@ -31,6 +31,10 @@ output_path = "~/.config/gtk-4.0/noctalia.css"
 input_path = "~/.config/noctalia/plantillas/hypr-borde.conf"
 output_path = "~/.config/hypr/themes/noctalia-borde.conf"
 
+[theme.templates.user.hypr-borde-fondo-lua]
+input_path = "~/.config/noctalia/plantillas/hypr-borde.lua"
+output_path = "~/.config/hypr/themes/noctalia-borde.lua"
+
 [theme.templates.user.wofi-fondo]
 input_path = "~/.config/noctalia/plantillas/wofi.css"
 output_path = "~/.config/wofi/themes/noctalia.css"

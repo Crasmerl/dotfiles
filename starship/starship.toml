@@ -38,9 +38,9 @@ style = "bg:blue fg:black bold"
 format = "[ $symbol]($style)"
 
 [os.symbols]
-Arch = " "
-CachyOS = " "
-Linux = " "
+Arch = "󱅽 "
+CachyOS = "󱅽 "
+Linux = "󱅽 "
 
 [username]
 show_always = true

@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+"""SUPER+F: todas las ventanas del escritorio actual pasan a flotantes (en su mismo sitio).
+Al volver a pulsar, vuelven al mosaico reconstruyendo la colocación que tenían."""
+import json, os, subprocess, time
+
+RUN = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
+
+def hypr(*args):
+    return subprocess.run(["hyprctl", *args], capture_output=True, text=True).stdout
+
+MARGEN = 18   # píxeles que se encoge cada lado al flotar
+
+def j(cmd):
+    return json.loads(hypr(cmd, "-j"))
+
+# Con la config en Lua (hyprland.lua) hyprctl ya no entiende las órdenes "dispatch ..."
+# de antes: se traducen a Lua y se mandan todas juntas con "hyprctl eval".
+LUA = hypr("eval", "local _ = 1").strip() == "ok"
+
+def a_lua(cmd):
+    """Traduce una orden "dispatch ..." del formato antiguo a un dispatcher de Lua."""
+    nombre, _, args = cmd.removeprefix("dispatch ").partition(" ")
+    if nombre in ("setfloating", "settiled"):
+        accion = "enable" if nombre == "setfloating" else "disable"
+        return f'hl.dsp.window.float({{ action = "{accion}", window = "{args}" }})'
+    if nombre in ("resizewindowpixel", "movewindowpixel"):
+        tam, ventana = args.removeprefix("exact ").split(",", 1)
+        x, y = tam.split()
+        f = "resize" if nombre == "resizewindowpixel" else "move"
+        return f'hl.dsp.window.{f}({{ x = {x}, y = {y}, window = "{ventana}" }})'
+    if nombre == "focuswindow":
+        return f'hl.dsp.focus({{ window = "{args}" }})'
+    if nombre == "layoutmsg":
+        return f'hl.dsp.layout("{args}")'
+    if nombre == "movetoworkspacesilent":
+        ws, ventana = args.split(",", 1)
+        return f'hl.dsp.window.move({{ workspace = "{ws}", follow = false, window = "{ventana}" }})'
+    raise ValueError(f"orden sin traducir: {cmd}")
+
+def batch(cmds):
+    if not cmds:
+        return
+    if LUA:
+        hypr("eval", "\n".join(f"hl.dispatch({a_lua(c)})" for c in cmds))
+    else:
+        hypr("--batch", ";".join(cmds))
+
+ws = j("activeworkspace")["id"]
+guardado = f"{RUN}/ventanas-flotantes-{ws}.json"
+ventanas = [c for c in j("clients") if c["workspace"]["id"] == ws and c["mapped"]]
+activa = j("activewindow").get("address")
+
+def flotar():
+    tiled = [c for c in ventanas if not c["floating"]]
+    geo = {c["address"]: (*c["at"], *c["size"]) for c in tiled}
+    with open(guardado, "w") as f:
+        json.dump(geo, f)
+    cmds = []
+    for a, (x, y, w, h) in geo.items():
+        cmds += [f"dispatch setfloating address:{a}",
+                 f"dispatch resizewindowpixel exact {w} {h},address:{a}",
+                 f"dispatch movewindowpixel exact {x} {y},address:{a}"]
+    batch(cmds)
+    # Animación: las ventanas se "despegan" encogiéndose un poco hacia dentro
+    time.sleep(0.08)
+    m = MARGEN
+    cmds = []
+    for a, (x, y, w, h) in geo.items():
+        cmds += [f"dispatch resizewindowpixel exact {w - 2*m} {h - 2*m},address:{a}",
+                 f"dispatch movewindowpixel exact {x + m} {y + m},address:{a}"]
+    batch(cmds)
+
+def cortar(grupo, geo):
+    """Busca una línea vertical u horizontal que separe el grupo en dos (como hace dwindle)."""
+    for eje, dir_ in ((0, "r"), (1, "d")):
+        ordenadas = sorted(grupo, key=lambda a: geo[a][eje])
+        for i in range(1, len(ordenadas)):
+            a_, b_ = ordenadas[:i], ordenadas[i:]
+            fin_a = max(geo[a][eje] + geo[a][eje + 2] for a in a_)
+            ini_b = min(geo[b][eje] for b in b_)
+            if fin_a <= ini_b:
+                return a_, b_, dir_
+    return None
+
+def reconstruir(grupo, hoja, geo, conocidas):
+    if len(grupo) <= 1:
+        return
+    corte = cortar(grupo, geo)
+    if not corte:                      # no se puede reconstruir: se meten tal cual
+        for a in grupo:
+            if a not in conocidas:
+                batch([f"dispatch focuswindow address:{hoja}", f"dispatch settiled address:{a}"])
+                conocidas.add(a)
+        return
+    g1, g2, d = corte
+    if hoja in g2:                     # la ventana ya colocada está a la derecha/abajo
+        w2 = g1[0]
+        d = {"r": "l", "d": "u"}[d]
+        g1, g2 = g2, g1
+    else:
+        w2 = g2[0]
+    batch([f"dispatch focuswindow address:{hoja}", f"dispatch layoutmsg preselect {d}",
+           f"dispatch settiled address:{w2}"])
+    conocidas.add(w2)
+    time.sleep(0.05)
+    reconstruir(g1, hoja, geo, conocidas)
+    reconstruir(g2, w2, geo, conocidas)
+
+def mosaico():
+    try:
+        with open(guardado) as f:
+            geo = {a: tuple(v) for a, v in json.load(f).items()}
+    except (OSError, ValueError):
+        geo = {}
+    presentes = {c["address"] for c in ventanas}
+    geo = {a: g for a, g in geo.items() if a in presentes}
+    flotantes = [c["address"] for c in ventanas if c["floating"]]
+    if geo:
+        orden = sorted(geo, key=lambda a: (geo[a][0], geo[a][1]))
+        primera = orden[0]
+        batch([f"dispatch settiled address:{primera}"])
+        conocidas = {primera}
+        reconstruir(orden, primera, geo, conocidas)
+        # Ajustar tamaños exactos
+        for _ in range(4):
+            batch([f"dispatch resizewindowpixel exact {g[2]} {g[3]},address:{a}" for a, g in geo.items()])
+            time.sleep(0.05)
+    # Las que no estaban guardadas (nuevas) también vuelven al mosaico
+    batch([f"dispatch settiled address:{a}" for a in flotantes if a not in geo])
+    try:
+        os.remove(guardado)
+    except OSError:
+        pass
+
+if any(not c["floating"] for c in ventanas):
+    flotar()
+else:
+    mosaico()
+if activa:
+    batch([f"dispatch focuswindow address:{activa}"])
