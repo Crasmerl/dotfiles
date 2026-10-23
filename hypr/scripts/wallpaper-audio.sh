@@ -14,7 +14,9 @@ PASOS=30           # cuantos más pasos, más suave
 # Socket de mpv y volumen máximo salen de los ajustes del plugin
 # (el volumen es el de su barra; si no hay, 100)
 # Noctalia 5: el plugin deja un socket por monitor en ~/.local/state/noctalia/mpvpaper
-SOCK_V5="${XDG_STATE_HOME:-$HOME/.local/state}/noctalia/mpvpaper/ipc-eDP-1.sock"
+# (monitor principal: el primero que da Hyprland; si no se puede saber, eDP-1)
+MONITOR=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0].name // empty')
+SOCK_V5="${XDG_STATE_HOME:-$HOME/.local/state}/noctalia/mpvpaper/ipc-${MONITOR:-eDP-1}.sock"
 mpv_sock() {
     if [ -S "$SOCK_V5" ]; then echo "$SOCK_V5"
     else jq -r '.mpvSocket // "/tmp/mpv-socket"' "$PLUGIN_SETTINGS" 2>/dev/null; fi
