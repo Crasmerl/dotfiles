@@ -1,171 +1,110 @@
 #!/bin/bash
+# Instala los dotfiles: crea enlaces simbólicos desde este repo a ~/.config,
+# ~/.tmux.conf y ~/.local/bin. Lo que ya exista (y no sea un enlace) se mueve
+# antes a ~/.dotfiles_backup/<fecha>/.
+# Noctalia 5 se copia (no se enlaza) y se adapta a tu usuario y a tu monitor.
 
-# Dotfiles installation script
-# This script creates symbolic links from the dotfiles repo to the appropriate locations
+set -e
 
-set -e  # Exit on any error
+ROJO='\033[0;31m'
+VERDE='\033[0;32m'
+AMARILLO='\033[1;33m'
+AZUL='\033[0;34m'
+NC='\033[0m'
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+if [[ "$OSTYPE" != linux* ]]; then
+  echo -e "${ROJO}Estos dotfiles son solo para Linux (Hyprland).${NC}"
+  exit 1
+fi
 
-# Get the directory where this script is located (the dotfiles repo root)
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Una sola carpeta de copia de seguridad para toda la instalación
+BACKUP_DIR="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
+HUBO_BACKUP=0
 
-# Detect OS
-OS="unknown"
-case "$OSTYPE" in
-  darwin*)  OS="mac" ;;
-  linux*)   OS="linux" ;;
-  *)        echo -e "${RED}Unsupported OS: $OSTYPE${NC}"; exit 1 ;;
-esac
+echo -e "${AZUL}🚀 Instalando dotfiles desde $DOTFILES_DIR${NC}"
 
-echo -e "${BLUE}🚀 Installing dotfiles for $OS...${NC}"
-echo -e "${BLUE}Dotfiles directory: $DOTFILES_DIR${NC}"
-
-# Function to create backup
-backup_file() {
-  local file="$1"
-  if [[ -e "$file" && ! -L "$file" ]]; then
-    local backup_dir="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
-    mkdir -p "$backup_dir"
-    mv "$file" "$backup_dir/"
-    echo -e "${YELLOW}  Backed up existing file to: $backup_dir/$(basename "$file")${NC}"
+# Mueve a la copia de seguridad lo que exista y no sea un enlace
+copia_seguridad() {
+  local destino="$1"
+  if [[ -e "$destino" && ! -L "$destino" ]]; then
+    mkdir -p "$BACKUP_DIR"
+    mv "$destino" "$BACKUP_DIR/"
+    HUBO_BACKUP=1
+    echo -e "${AMARILLO}  Copia de seguridad: $BACKUP_DIR/$(basename "$destino")${NC}"
   fi
 }
 
-# Function to create symbolic link
-create_symlink() {
-  local src="$1"
-  local dest="$2"
-  local desc="$3"
-  
-  echo -e "${BLUE}Installing $desc...${NC}"
-  
-  # Create parent directory if it doesn't exist
-  mkdir -p "$(dirname "$dest")"
-  
-  # Backup existing file/directory if it exists and is not a symlink
-  backup_file "$dest"
-  
-  # Remove existing symlink or file
-  rm -rf "$dest"
-  
-  # Create the symlink
-  ln -sf "$src" "$dest"
-  echo -e "${GREEN}  ✓ $desc installed${NC}"
+# enlazar <origen> <destino> <descripción>
+enlazar() {
+  local origen="$1" destino="$2" desc="$3"
+  [[ -e "$origen" ]] || return 0
+  mkdir -p "$(dirname "$destino")"
+  copia_seguridad "$destino"
+  rm -rf "$destino"
+  ln -s "$origen" "$destino"
+  echo -e "${VERDE}  ✓ $desc${NC}"
 }
 
-# Function to copy files (for cases where symlinks aren't appropriate)
-copy_file() {
-  local src="$1"
-  local dest="$2"
-  local desc="$3"
-  
-  echo -e "${BLUE}Installing $desc...${NC}"
-  
-  # Create parent directory if it doesn't exist
-  mkdir -p "$(dirname "$dest")"
-  
-  # Backup existing file
-  backup_file "$dest"
-  
-  # Copy the file
-  cp "$src" "$dest"
-  echo -e "${GREEN}  ✓ $desc installed${NC}"
-}
+echo -e "\n${AZUL}🔧 Configuraciones en ~/.config${NC}"
+for app in hypr btop kitty wofi nvim fastfetch thefuck yazi fish; do
+  enlazar "$DOTFILES_DIR/$app" "$HOME/.config/$app" "$app"
+done
+enlazar "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml" "starship"
+enlazar "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.tmux.conf" "tmux"
 
-echo -e "${BLUE}📁 Creating ~/.config directory if it doesn't exist...${NC}"
-mkdir -p "$HOME/.config"
-
-# Install configs that go to ~/.config/
-echo -e "\n${BLUE}🔧 Installing application configs to ~/.config/...${NC}"
-
-# Hyprland (Linux only)
-if [[ "$OS" == "linux" && -d "$DOTFILES_DIR/hypr" ]]; then
-  create_symlink "$DOTFILES_DIR/hypr" "$HOME/.config/hypr" "Hyprland window manager config"
-fi
-
-# btop system monitor
-if [[ -d "$DOTFILES_DIR/btop" ]]; then
-  create_symlink "$DOTFILES_DIR/btop" "$HOME/.config/btop" "btop system monitor config"
-fi
-
-# Kitty terminal
-if [[ -d "$DOTFILES_DIR/kitty" ]]; then
-  create_symlink "$DOTFILES_DIR/kitty" "$HOME/.config/kitty" "Kitty terminal config"
-fi
-
-# Wofi launcher (Linux only)
-if [[ "$OS" == "linux" && -d "$DOTFILES_DIR/wofi" ]]; then
-  create_symlink "$DOTFILES_DIR/wofi" "$HOME/.config/wofi" "Wofi launcher config"
-fi
-
-
-# Neovim
-if [[ -d "$DOTFILES_DIR/nvim" ]]; then
-  create_symlink "$DOTFILES_DIR/nvim" "$HOME/.config/nvim" "Neovim config"
-fi
-
-# fastfetch
-if [[ -d "$DOTFILES_DIR/fastfetch" ]]; then
-  create_symlink "$DOTFILES_DIR/fastfetch" "$HOME/.config/fastfetch" "fastfetch config"
-fi
-
-# thefuck
-if [[ -d "$DOTFILES_DIR/thefuck" ]]; then
-  create_symlink "$DOTFILES_DIR/thefuck" "$HOME/.config/thefuck" "thefuck config"
-fi
-
-# yazi file manager
-if [[ -d "$DOTFILES_DIR/yazi" ]]; then
-  create_symlink "$DOTFILES_DIR/yazi" "$HOME/.config/yazi" "yazi config"
-fi
-
-# fish shell
-if [[ -d "$DOTFILES_DIR/fish" ]]; then
-  create_symlink "$DOTFILES_DIR/fish" "$HOME/.config/fish" "fish config"
-fi
-
-# starship prompt
-if [[ -f "$DOTFILES_DIR/starship/starship.toml" ]]; then
-  create_symlink "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml" "starship config"
-fi
-
-# tmux
-if [[ -f "$DOTFILES_DIR/tmux/tmux.conf" ]]; then
-  create_symlink "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.tmux.conf" "tmux config"
-fi
+# Scripts propios: todos los de bin/ (los atajos de Hyprland y Noctalia los llaman desde ~/.local/bin)
+echo -e "\n${AZUL}📜 Scripts en ~/.local/bin${NC}"
+for s in "$DOTFILES_DIR"/bin/*; do
+  [[ -f "$s" ]] && enlazar "$s" "$HOME/.local/bin/$(basename "$s")" "$(basename "$s")"
+done
 
 # Noctalia 5 (copia, no enlace). Lo cambiado desde la ventana de Ajustes
-# va a ~/.local/state/noctalia/settings.toml (aquí settings-gui.toml)
-if [[ "$OS" == "linux" && -d "$DOTFILES_DIR/noctalia-v5" ]]; then
-  mkdir -p "$HOME/.config/noctalia" "$HOME/.local/state/noctalia"
+# va a ~/.local/state/noctalia/settings.toml (aquí settings-gui.toml).
+# Solo se copia lo que no exista, para no pisar tu config.
+if [[ -d "$DOTFILES_DIR/noctalia-v5" ]]; then
+  echo -e "\n${AZUL}🌙 Noctalia 5${NC}"
+  NOC_CONF="$HOME/.config/noctalia"
+  NOC_STATE="$HOME/.local/state/noctalia"
+  mkdir -p "$NOC_CONF" "$NOC_STATE"
+  copiados=()
   for f in config.toml templates.toml plantillas colores-apps iconos; do
-    cp -rn "$DOTFILES_DIR/noctalia-v5/$f" "$HOME/.config/noctalia/"
+    if [[ ! -e "$NOC_CONF/$f" ]]; then
+      cp -r "$DOTFILES_DIR/noctalia-v5/$f" "$NOC_CONF/"
+      copiados+=("$NOC_CONF/$f")
+    fi
   done
-  cp -n "$DOTFILES_DIR/noctalia-v5/settings-gui.toml" "$HOME/.local/state/noctalia/settings.toml"
-  echo -e "${GREEN}✓${NC} Noctalia 5 config copied"
+  if [[ ! -e "$NOC_STATE/settings.toml" ]]; then
+    cp "$DOTFILES_DIR/noctalia-v5/settings-gui.toml" "$NOC_STATE/settings.toml"
+    copiados+=("$NOC_STATE/settings.toml")
+  fi
+
+  if (( ${#copiados[@]} )); then
+    # Adapta lo recién copiado: rutas de mi usuario → tu $HOME, y mi monitor → el tuyo
+    monitor=""
+    command -v hyprctl >/dev/null && command -v jq >/dev/null &&
+      monitor=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0].name // empty')
+    adaptar() { find "${copiados[@]}" -type f \( -name '*.toml' -o -name '*.json' \) -exec sed -i "$1" {} +; }
+    adaptar "s|/home/crasmerl|$HOME|g"
+    if [[ -n "$monitor" && "$monitor" != "eDP-1" ]]; then
+      adaptar "s|eDP-1|$monitor|g"
+      echo -e "${VERDE}  ✓ Monitor cambiado de eDP-1 a $monitor${NC}"
+    elif [[ -z "$monitor" ]]; then
+      echo -e "${AMARILLO}  No he podido detectar tu monitor (¿Hyprland no está abierto?): la config usa eDP-1${NC}"
+    fi
+    echo -e "${VERDE}  ✓ Copiado: ${copiados[*]##*/}${NC}"
+  else
+    echo -e "${AMARILLO}  Ya tenías config de Noctalia: no se ha tocado${NC}"
+  fi
 fi
 
-# Scripts propios (colores según el fondo, esquina activa, ventiladores, cambio 4/5)
-if [[ "$OS" == "linux" ]]; then
-  for s in colores-fondo esconder-ventanas modo-silencioso noctalia-cambiar; do
-    [[ -f "$DOTFILES_DIR/bin/$s" ]] && create_symlink "$DOTFILES_DIR/bin/$s" "$HOME/.local/bin/$s" "$s"
-  done
+echo -e "\n${VERDE}🎉 ¡Listo!${NC}"
+echo -e "\n${AZUL}📋 Siguientes pasos:${NC}"
+echo -e "  1. Revisa ${AMARILLO}hypr/config/monitores.lua${NC}: tiene mis monitores, pon los tuyos"
+echo -e "  2. Pon tus fondos en ~/Imágenes/Fondos (o cambia la carpeta en los ajustes de Noctalia)"
+echo -e "  3. Abre otra terminal (fish) y reinicia la sesión de Hyprland"
+echo -e "  4. Opcional: chuletas-teclado (ver README)"
+
+if (( HUBO_BACKUP )); then
+  echo -e "\n${AMARILLO}📦 Lo que tenías antes está en: $BACKUP_DIR${NC}"
 fi
-
-echo -e "\n${GREEN}🎉 Dotfiles installation completed!${NC}"
-echo -e "\n${BLUE}📋 Next steps:${NC}"
-echo -e "  1. Restart your terminal (fish)"
-echo -e "  2. If you installed Hyprland configs, restart your session"
-echo -e "  3. Configure any application-specific settings as needed"
-
-if [[ -d "$HOME/.dotfiles_backup" ]]; then
-  echo -e "\n${YELLOW}📦 Backed up files are stored in: ~/.dotfiles_backup${NC}"
-fi
-
-echo -e "\n${GREEN}✨ Happy coding!${NC}"

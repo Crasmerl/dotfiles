@@ -41,21 +41,45 @@ cd ~/dev/config/dotfiles
 ./install.sh
 ```
 
-El script de instalación crea los symlinks automáticamente y hace una copia de seguridad de las configuraciones existentes en `~/.dotfiles_backup/`.
+El script de instalación:
+
+- Crea los symlinks de todo (configs en `~/.config` y scripts de `bin/` en `~/.local/bin`) y guarda lo que ya tuvieras en `~/.dotfiles_backup/<fecha>/`.
+- Copia la config de Noctalia 5 solo si no tienes una, cambiando mis rutas (`/home/crasmerl`) por tu `$HOME` y el monitor `eDP-1` por el tuyo (si Hyprland está abierto).
+
+> [!IMPORTANT]
+> Algunas cosas son de mi equipo y tendrás que cambiarlas a mano:
+> - `hypr/config/monitores.lua`: mis monitores (portátil, HDMI y la tableta XP-Pen).
+> - Los fondos se buscan en `~/Imágenes/Fondos`, y `bin/colores-fondo` usa `background.png` como fondo con los colores de siempre.
+> - `bin/modo-silencioso` controla los ventiladores con nbfc, pensado para mi portátil.
 
 ## Requisitos
+
+**Base:**
 
 - Hyprland
 - Noctalia **5.x** (ver aviso arriba)
 - fish + Starship
 - tmux
-- eza, fzf
 - Kitty
 - Neovim (NvChad)
-- fastfetch
 - wofi
-- btop
-- thefuck
+- eza, fzf, bat
+- fastfetch, btop, yazi, thefuck
+
+**Para los scripts y los colores según el fondo:**
+
+- `jq`, `socat`, `python`
+- `cliphist` y `wl-clipboard` (portapapeles, SUPER+SHIFT+V)
+- `libqalculate` (`qalc`, calculadora, SUPER+C)
+- `libnotify` (`notify-send`)
+- `adw-gtk-theme` (tema GTK con los colores del fondo)
+- `cava` (visualizador de audio)
+- `mpvpaper` (fondo de vídeo), `playerctl`, `brightnessctl`, `wireplumber` (`wpctl`)
+
+**Opcionales:**
+
+- [Pywalfox](https://github.com/Frewacom/pywalfox) para Firefox y Vesktop para Discord, si quieres que también cojan los colores
+- `nbfc-linux` para `modo-silencioso`
 
 ## Qué incluye
 
