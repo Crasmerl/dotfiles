@@ -1,0 +1,17 @@
+--- panel.luau
++++ panel.luau
+@@ -122,10 +122,12 @@
+   xf86audiomicmute = "Mic Mute",
+   xf86monbrightnessup = "Bright Up",
+   xf86monbrightnessdown = "Bright Down",
+-  xf86audioplay = "Play/Pause",
++  xf86audioplay = "Play",
+   xf86audiopause = "Pause",
+   xf86audionext = "Next",
+-  xf86audioprev = "Previous",
++  xf86audioprev = "Prev",
++  mouse_down = "Rueda ↓",
++  mouse_up = "Rueda ↑",
+   print = "PrtSc",
+   prtsc = "PrtSc",
+   prior = "PgUp",
