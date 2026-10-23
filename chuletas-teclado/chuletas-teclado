@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+# Vigila solo Ctrl, Shift y Alt en todos los teclados y escribe cuál está
+# pulsado en /run/user/1000/kitty-mods (lo lee ~/.config/kitty/tab_bar.py).
+import asyncio
+
+import evdev
+from evdev import ecodes as e
+
+ESTADO = "/run/user/1000/kitty-mods"
+TECLAS = {
+    e.KEY_LEFTCTRL: "ctrl", e.KEY_RIGHTCTRL: "ctrl",
+    e.KEY_LEFTSHIFT: "shift", e.KEY_RIGHTSHIFT: "shift",
+    e.KEY_LEFTALT: "alt",  # AltGr no cuenta
+}
+
+pulsadas = {}  # (dispositivo, tecla) -> nombre
+ultimo = None
+
+
+def escribir():
+    global ultimo
+    activas = set(pulsadas.values())
+    if "ctrl" in activas:
+        modo = "ctrlshift" if "shift" in activas else "ctrl"
+    elif "alt" in activas:
+        modo = "alt"
+    else:
+        modo = ""
+    if modo == ultimo:
+        return
+    try:
+        with open(ESTADO, "w") as f:
+            f.write(modo + "\n")
+        ultimo = modo
+    except OSError:
+        pass  # aún no hay sesión iniciada
+
+
+async def leer(disp):
+    try:
+        async for ev in disp.async_read_loop():
+            if ev.type == e.EV_KEY and ev.code in TECLAS and ev.value != 2:
+                clave = (disp.path, ev.code)
+                if ev.value == 1:
+                    pulsadas[clave] = TECLAS[ev.code]
+                else:
+                    pulsadas.pop(clave, None)
+                escribir()
+    except OSError:
+        pass  # teclado desconectado
+    for clave in [c for c in pulsadas if c[0] == disp.path]:
+        del pulsadas[clave]
+    escribir()
+
+
+def es_teclado(disp):
+    return e.KEY_LEFTCTRL in disp.capabilities().get(e.EV_KEY, [])
+
+
+async def main():
+    vigilados = {}
+    while True:
+        # cada 5 s mira si se conectó un teclado nuevo
+        for ruta in evdev.list_devices():
+            tarea = vigilados.get(ruta, False)
+            if tarea is None or (tarea and not tarea.done()):
+                continue  # ya visto: no es teclado, o ya se está leyendo
+            try:
+                disp = evdev.InputDevice(ruta)
+            except OSError:
+                continue
+            if es_teclado(disp):
+                vigilados[ruta] = asyncio.create_task(leer(disp))
+            else:
+                vigilados[ruta] = None
+                disp.close()
+        await asyncio.sleep(5)
+
+
+asyncio.run(main())

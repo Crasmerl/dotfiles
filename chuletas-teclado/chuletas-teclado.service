@@ -1,0 +1,12 @@
+[Unit]
+Description=Chuletas de kitty: avisa de Ctrl/Shift/Alt pulsados
+
+[Service]
+ExecStart=/usr/local/bin/chuletas-teclado
+Restart=always
+RestartSec=2
+NoNewPrivileges=yes
+PrivateNetwork=yes
+
+[Install]
+WantedBy=multi-user.target

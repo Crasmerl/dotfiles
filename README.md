@@ -68,7 +68,8 @@ El script de instalación crea los symlinks automáticamente y hace una copia de
 | **starship/** | Prompt estilo powerline |
 | **tmux/** | Multiplexor de terminal (uso desde el iPad por SSH) |
 | **nvim/** | Neovim con NvChad, tema propio *cenote* y colores según el fondo |
-| **kitty/** | Kitty con estela del cursor y colores según el fondo |
+| **kitty/** | Kitty con estela del cursor, colores según el fondo y barra de chuletas abajo (`tab_bar.py`) que cambia al mantener Ctrl, Ctrl+Shift o Alt |
+| **chuletas-teclado/** | Servicio (root) que avisa a kitty de qué tecla Ctrl/Shift/Alt está pulsada. Instalar: copiar el script a `/usr/local/bin/`, el `.service` a `/etc/systemd/system/` y `systemctl enable --now chuletas-teclado` |
 | **fastfetch/** | Info del sistema al abrir la terminal con logo personalizado |
 | **btop/** | Monitor del sistema con tema de Noctalia |
 | **wofi/** | Lanzador de aplicaciones, configuración y estilos |
