@@ -61,7 +61,7 @@ El script de instalación crea los symlinks automáticamente y hace una copia de
 
 | Carpeta | Descripción |
 |---|---|
-| **hypr/** | Hyprland en Lua (`hyprland.lua`, desde la 0.56; `hyprland.conf` queda de copia), hypridle y fondo de vídeo con audio que baja cuando hay ventanas |
+| **hypr/** | Hyprland en Lua: `hyprland.lua` carga las partes de `config/` (monitores, programas, apariencia, entrada, atajos, reglas); `hyprland.conf` queda de copia, hypridle y fondo de vídeo con audio que baja cuando hay ventanas |
 | **noctalia-v5/** | Noctalia 5: `config.toml`, plantillas de colores según el fondo, iconos y ajustes de la ventana de Ajustes (`settings-gui.toml`). Se copia, no se enlaza. En `keybind-cheatsheet/` está el parche del keymap (nombres de teclas y orden Super+Shift): tras actualizar el plugin, ejecutar `aplicar.sh` |
 | **noctalia-v4/** | Config antigua de Noctalia 4.x (ya no se usa) |
 | **fish/** | Shell fish con frases y avisos de personajes (Miku, Teto, Adachi Rei…) |

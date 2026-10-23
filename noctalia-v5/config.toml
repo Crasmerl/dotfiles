@@ -115,7 +115,8 @@ video_directory = "/home/crasmerl/Videos"
 mute = true
 
 [plugin_settings."kenn/keybind-cheatsheet"]
-show_undescribed = false   # no mostrar atajos sin descripción (el Pause repetido de hyprland.lua)
+show_undescribed = false   # no mostrar atajos sin descripción (el Pause repetido de atajos.lua)
+hyprland_lua_config = "~/.config/hypr/config/atajos.lua"   # las categorías están ahí (leer toda la config se pasa de tiempo)
 
 # ---------------------------------------------------------------- Colores
 [theme]
