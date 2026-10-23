@@ -55,7 +55,7 @@ window {
 }
 
 #input * {
-  outline: none !important;
+  outline: none;
 }
 
 /* Entry */
@@ -63,6 +63,9 @@ window {
   padding: 4px 8px;
   border-radius: 6px;
   background: transparent;
+  border: 1px solid transparent;   /* así el borde al seleccionar no mueve nada */
+  /* fundido suave al moverse por la lista */
+  transition: background-color 180ms ease-out, border-color 180ms ease-out;
 }
 
 #entry:selected {
@@ -73,6 +76,7 @@ window {
 
 /* Text */
 #text {
+  transition: color 180ms ease-out;
   margin: 2px 6px;
   color: {{colors.on_surface.default.hex}};
 }
@@ -87,5 +91,5 @@ window {
 }
 
 #entry:drop(active) {
-  background-color: rgba({{colors.primary.default.rgb_csv}}, 0.3) !important;
+  background-color: rgba({{colors.primary.default.rgb_csv}}, 0.3);
 }

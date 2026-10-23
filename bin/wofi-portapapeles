@@ -1,0 +1,13 @@
+#!/bin/bash
+# Historial del portapapeles en wofi (SUPER+SHIFT+V).
+# Lo guarda cliphist: hyprland lanza "wl-paste --watch cliphist store" al arrancar (config/programas.lua).
+# Enter sobre una entrada = se vuelve a copiar, lista para pegar con Ctrl+V.
+# Se enseña el texto sin el número de cliphist y wofi devuelve el número de línea elegido
+# (así lo copiado nunca pasa por una orden de shell).
+ESTILO=~/.config/wofi/estilo-actual.css
+
+lista=$(cliphist list)
+[ -z "$lista" ] && { notify-send -a Portapapeles "El historial está vacío"; exit 0; }
+linea=$(printf '%s\n' "$lista" | cut -f 2- | wofi --dmenu --prompt "Portapapeles..." \
+    --style "$ESTILO" --cache-file /dev/null --define=dmenu-print_line_num=true) || exit 0
+printf '%s\n' "$lista" | sed -n "$((linea + 1))p" | cliphist decode | wl-copy

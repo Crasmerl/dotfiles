@@ -5,9 +5,18 @@ location=center
 prompt=Buscar...
 filter_rate=100
 allow_markup=true
-no_actions=true
 insensitive=true
 allow_images=true
 image_size=24
 gtk_dark=true
-
+# Mejoras 2026-10-23
+# la ventana se encoge según los resultados
+dynamic_lines=true
+# qué es cada app: "Firefox (Navegador web)"
+drun-display_generic=true
+# búsqueda aproximada: "frfx" encuentra Firefox
+matching=fuzzy
+# acciones de las apps (ventana privada de Firefox...)
+no_actions=false
+# con → se despliegan las acciones
+key_expand=Right

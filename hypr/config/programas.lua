@@ -7,6 +7,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("hyprsunset")
     hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
     hl.exec_cmd("xwaylandvideobridge")
+    -- historial del portapapeles para wofi (SUPER+SHIFT+V): texto e imágenes
+    hl.exec_cmd("wl-paste --type text --watch cliphist store")
+    hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
 -- Quitados (referencia): mpvpaper (ahora el plugin de Noctalia), waycorner (Noctalia 5: [hot_corners]),
 -- waybar/swaync (antes de Noctalia), eww (2026-10-03), nm-applet y blueman-applet (en Noctalia),

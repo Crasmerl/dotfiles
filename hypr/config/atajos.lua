@@ -18,6 +18,8 @@ hl.bind(mainMod .. " + space",         hl.dsp.exec_cmd(menu),        { descripti
 hl.bind(mainMod .. " + SHIFT + E",     hl.dsp.exec_cmd("bemoji"),    { description = "Selector de emojis" })
 hl.bind(mainMod .. " + I",             hl.dsp.exec_cmd("kitty --class claude-code -e claude"), { description = "Abrir Claude Code" })
 hl.bind(mainMod .. " + B",             hl.dsp.exec_cmd(browser),     { description = "Abrir navegador" })
+hl.bind(mainMod .. " + C",             hl.dsp.exec_cmd("~/.local/bin/wofi-calculadora"),  { description = "Calculadora (wofi)" })
+hl.bind(mainMod .. " + SHIFT + V",     hl.dsp.exec_cmd("~/.local/bin/wofi-portapapeles"), { description = "Historial del portapapeles (wofi)" })
 
 -- 2. VENTANAS
 hl.bind(mainMod .. " + Q",             hl.dsp.window.close(),                     { description = "Cerrar ventana" })

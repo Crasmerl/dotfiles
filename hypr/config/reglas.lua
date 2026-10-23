@@ -73,5 +73,8 @@ hl.window_rule({
 
 
 -- Reglas de capa
-hl.layer_rule({ match = { namespace = "^(wofi)$" }, blur = true, ignore_alpha = 0.1 })
+-- wofi: al abrir sube desde abajo pasando de transparente a normal; al cerrar, al revés
+-- (el movimiento usa la velocidad de layersIn/layersOut y la transparencia la de
+-- fadeLayersIn/fadeLayersOut, en apariencia.lua)
+hl.layer_rule({ match = { namespace = "^(wofi)$" }, blur = true, ignore_alpha = 0.1, animation = "slide bottom" })
 hl.layer_rule({ match = { namespace = "^(swaync-control-center)$" }, animation = "slide right" })

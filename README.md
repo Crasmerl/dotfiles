@@ -72,7 +72,7 @@ El script de instalación crea los symlinks automáticamente y hace una copia de
 | **chuletas-teclado/** | Servicio (root) que avisa a kitty de qué tecla Ctrl/Shift/Alt está pulsada. Instalar: copiar el script a `/usr/local/bin/`, el `.service` a `/etc/systemd/system/` y `systemctl enable --now chuletas-teclado` |
 | **fastfetch/** | Info del sistema al abrir la terminal con logo personalizado |
 | **btop/** | Monitor del sistema con tema de Noctalia |
-| **wofi/** | Lanzador de aplicaciones, configuración y estilos |
+| **wofi/** | Lanzador de aplicaciones: sube desde abajo al abrir, búsqueda aproximada, acciones de las apps (→), calculadora y portapapeles |
 | **thefuck/** | Configuración del corrector de comandos |
 | **yazi/** | Gestor de archivos en terminal |
-| **bin/** | Scripts: `colores-fondo` (colores según el fondo), `esconder-ventanas` (esquina activa), `ventanas-flotantes` (SUPER+F), `modo-silencioso` (ventiladores), `noctalia-cambiar`. Funcionan con la config en Lua y con la antigua |
+| **bin/** | Scripts: `colores-fondo` (colores según el fondo), `esconder-ventanas` (esquina activa), `ventanas-flotantes` (SUPER+F), `wofi-calculadora` (SUPER+C), `wofi-portapapeles` (SUPER+SHIFT+V), `modo-silencioso` (ventiladores), `noctalia-cambiar`. Funcionan con la config en Lua y con la antigua |

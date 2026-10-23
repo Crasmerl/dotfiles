@@ -1,0 +1,26 @@
+#!/bin/bash
+# Calculadora en wofi (SUPER+C), con qalc.
+# Escribe una operación (2+2*5, sqrt(16), 100 eur to usd...) y Enter: el resultado sale en la lista.
+# Enter sobre un resultado de la lista = se copia y se cierra. Esc = salir.
+ESTILO=~/.config/wofi/estilo-actual.css
+AYUDA="Escribe una operación y pulsa Enter (2+2*5, sqrt(16), 100 eur to usd...)"
+lista=""   # resultados, el más nuevo arriba: "12   ← 2+2*5"
+
+while true; do
+    entrada=$(printf '%s\n%s' "$AYUDA" "$lista" | wofi --dmenu --prompt "Calcular... (ej: 2+2*5)" \
+        --style "$ESTILO" --cache-file /dev/null -M contains) || exit 0
+    [ -z "$entrada" ] && exit 0
+    [ "$entrada" = "$AYUDA" ] && continue   # Enter sobre la ayuda: no hace nada
+
+    # ¿Ha elegido un resultado de la lista? Se copia el número y se cierra
+    if [ -n "$lista" ] && printf '%s\n' "$lista" | grep -qxF -- "$entrada"; then
+        resultado=${entrada%%   ←*}
+        printf '%s' "$resultado" | wl-copy
+        notify-send -a Calculadora "Copiado" "$resultado"
+        exit 0
+    fi
+
+    resultado=$(qalc -t -- "$entrada" 2>/dev/null)
+    [ -z "$resultado" ] && resultado="no lo entiendo"
+    lista="$resultado   ← $entrada"$'\n'"$lista"
+done
