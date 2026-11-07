@@ -1,0 +1,38 @@
+#!/bin/bash
+# Manda un mensaje a la ventana de Claude abierta sin ir a ella (SUPER+A).
+# Uso: preguntar-claude [texto]. Sin texto, lo pide con wofi. CLASE cambia la clase de ventana (para pruebas).
+CLASE=${CLASE:-claude-code}
+ESTILO=~/.config/wofi/estilo-actual.css
+aviso() { notify-send -a Claude "$1" "$2"; }
+
+# La ventana usada más recientemente que tenga su socket.
+sock=""
+for pid in $(hyprctl clients -j | jq -r --arg c "$CLASE" \
+        '[.[] | select(.class == $c)] | sort_by(.focusHistoryID) | .[].pid'); do
+    if [ -S "$XDG_RUNTIME_DIR/kitty-claude-$pid" ]; then
+        sock="unix:$XDG_RUNTIME_DIR/kitty-claude-$pid"
+        break
+    fi
+done
+if [ -z "$sock" ]; then
+    aviso "Claude no está disponible" "Ábrelo con SUPER+I. Si ya estaba abierto de antes, ciérralo y ábrelo otra vez."
+    exit 1
+fi
+
+texto=$*
+if [ -z "$texto" ]; then
+    texto=$(printf '' | wofi --dmenu --prompt "Pregúntale a Claude..." --lines 1 \
+        --style "$ESTILO" --cache-file /dev/null) || exit 0
+fi
+[ -z "$texto" ] && exit 0
+
+# Si la ventana espera una decisión, Enter elegiría una opción sin que lo veas: no se manda nada.
+if kitty @ --to "$sock" get-text --extent screen 2>/dev/null |
+        grep -qE 'Do you want|Esc to cancel|Enter to confirm|Enter to select'; then
+    aviso "Claude espera tu respuesta" "Ve a su ventana: te está preguntando algo. No se ha mandado tu mensaje."
+    exit 1
+fi
+
+printf '%s' "$texto" | kitty @ --to "$sock" send-text --stdin || { aviso "No se pudo mandar" "$texto"; exit 1; }
+sleep .2   # separado del texto para que no cuente como parte de un pegado
+kitty @ --to "$sock" send-text '\r'

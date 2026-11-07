@@ -1,0 +1,4 @@
+#!/bin/sh
+# Abre Claude Code en una kitty que acepta órdenes por un socket propio, para preguntar-claude (SUPER+A).
+exec kitty --class claude-code -o allow_remote_control=socket-only \
+    --listen-on "unix:$XDG_RUNTIME_DIR/kitty-claude-{kitty_pid}" -e claude "$@"
